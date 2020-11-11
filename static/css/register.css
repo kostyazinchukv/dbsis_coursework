@@ -6,3 +6,16 @@
 #submit_button{
     margin-top: 20px;
 }
+footer{
+  margin-top:auto;
+}
+
+/* Trick */
+body{
+  display:flex;
+  flex-direction:column;
+}
+body{ height:100vh; margin:0; }
+
+header{ min-height:50px; background:lightcyan; }
+footer{ min-height:50px; background:PapayaWhip; }
