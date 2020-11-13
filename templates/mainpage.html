@@ -22,6 +22,7 @@
                 <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('contact')}}">Контакти</a>
                   {% if  name_c is not none%}
                     <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('my_cabinet')}}"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Особистий кабінет ({{name_c}})</a>
+                    <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('logout')}}"> Вийти</a>
                   {% else %}
                     <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('login')}}">Вхід</a>
                     <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('register')}}">Реєстрація</a>

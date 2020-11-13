@@ -1,14 +1,17 @@
 from flask import Flask,render_template,redirect,url_for,request
-app = Flask(__name__)
+import smtplib
 import psycopg2
-from python.connection_BD import registration,login_user
+from python.connection_BD import registration,login_user,get_customer_info
 
+app = Flask(__name__)
 
 nickname = None
+user_id = None
 
 @app.route('/')
 def red():
    return redirect(url_for('mainpage'))
+
 @app.route('/mainpage', methods = ['GET', 'POST'])
 def mainpage():
    global nickname
@@ -21,11 +24,8 @@ def cases():
 
 @app.route('/new_contract')
 def new_contract():
-   pass
-
-@app.route('/calculate')
-def calculate():
-   pass
+   global nickname
+   return render_template('flat_form.html', name_c =nickname)
 
 @app.route('/contact')
 def contact():
@@ -34,10 +34,24 @@ def contact():
 
 @app.route('/my_cabinet')
 def my_cabinet():
-   pass
+   global nickname
+   return render_template('cabinet.html', name_c =nickname)
+
+@app.route('/send')
+def send_email():
+   #global nickname
+   #global user_id
+   #em = get_customer_info(user_id)[2]
+   msg = 'Test'
+   server = smtplib.SMTP("smtp.gmail.com", 587)
+   server.starttls()
+   server.login("cumdickcompany@gmail.com", "CumDickCum")
+   server.sendmail("cumdickcompany@gmail.com", '8889344@ukr.net', msg)
+   return render_template('mainpage.html', name_c =nickname)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+   global user_id
    global nickname
    if request.method == 'GET':
       return render_template('sign_in.html', name_c =nickname)
@@ -56,6 +70,7 @@ def login():
       connection.close()
 
       if exit_code != -1:
+         user_id = exit_code
          nickname = login_name
          print(f'Виконано вхід як {nickname}')
          return render_template('mainpage.html', name_c =nickname)
@@ -89,20 +104,18 @@ def register():
          return render_template('mainpage.html', name_c =nickname)
       else:
          connection.close()
-         print(status)
+         #print(status)
          return render_template('registration.html', name_c =nickname)
    if request.method == 'GET':
       return render_template('registration.html', name_c =nickname)
 
-
-#@app.route('/<path:path_route>')
-#def Search_path(path_route):
-#    if (path_route == 'http://127.0.0.1:5000/'):
-#        return redirect(url_for('mainpage'))
-#    elif (path_route == 'contract'):
-#        return redirect(url_for('new_contract'))
-#    else:
-#        return redirect(url_for('mainpage'))
+@app.route('/logout')
+def logout():
+   global nickname
+   global user_id
+   nickname = None
+   user_id = None
+   return render_template('mainpage.html', name_c =nickname)
 
 
 if __name__ == '__main__':
