@@ -1,7 +1,7 @@
 import psycopg2
 import datetime
 
-def registration(login, password, email, age, name, card):
+def registration(login, password, email, age, name, card, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
     
@@ -11,7 +11,7 @@ def registration(login, password, email, age, name, card):
     
     return status
 
-def login(login_or_email, password):
+def login_user(login_or_email, password,connection):
     'Повертає id користувача'
     cursor = connection.cursor()
     

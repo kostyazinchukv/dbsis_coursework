@@ -15,42 +15,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
     </script>
-    <script src="js/jquery.payform.min.js" charset="utf-8"></script>
-    <script src="js/card_validation.js"></script>
-    <script src="js/form_validation.js"></script>
-    <script src="js/view_password.js"></script>
+    <script src="{{ url_for('static', filename = 'js/jquery.payform.min.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename = 'js/card_validation.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/form_validation.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/view_password.js') }}"></script>
     <title>Registration</title>
   </head>
   <body>
-        <nav class="bd-header sticky-top py-1 navbar navbar-dark bg-dark">
-            <div class="container d-flex flex-column flex-md-row justify-content-between">
-                <a class="py-2" href="#" aria-label="Product">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                         class="d-block mx-auto text-light" role="img" viewBox="0 0 24 24"
-                         focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/>
-                        <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/>
-                    </svg>
+           <nav class="site-header sticky-top py-1 navbar navbar-dark bg-dark">
+              <div class="container d-flex flex-column flex-md-row justify-content-between">
+                <a class="py-2" href="{{url_for('mainpage')}}" aria-label="Product">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto text-light" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
                 </a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Страховий випадок</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Оформити страховку</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Калькулятор цін</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Контакти</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Особистий кабінет</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Вхід</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="#">Реєстрація</a>
-            </div>
+                <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('cases')}}">Страховий випадок</a>
+                <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('new_contract')}}">Оформити страховку</a>
+                <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('contact')}}">Контакти</a>
+                  {% if  name_c is not none%}
+                    <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('my_cabinet')}}"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Особистий кабінет ({{name_c}})</a>
+                  {% else %}
+                    <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('login')}}">Вхід</a>
+                    <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('register')}}">Реєстрація</a>
+                  {% endif %}
+
+
+          </div>
+    </nav>
         </nav>
         <div class="container">
             <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 600px;">
                 <h4 class="card-title mt-3 text-center">Create Account</h4>
-                <form class="needs-validation" novalidate>
+                <form action="{{url_for('register')}}" method="post" class="needs-validation" novalidate>
                 <div class="form-group input-group input-group-lg">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                      </div>
-                    <input name="" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Full name" type="text" required >
+                    <input name="name" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Full name" type="text" required >
                     <div class="invalid-feedback">
                       Please enter valid full name.
                     </div>
@@ -59,7 +59,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                      </div>
-                    <input name="" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Login" type="text" required>
+                    <input name="login" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Login" type="text" required>
                     <div class="invalid-feedback">
                       Please enter valid login.
                     </div>
@@ -68,13 +68,13 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
                      </div>
-                    <input class="form-control" type="date" value="2000-01-01" id="example-date-input" required>
+                    <input name ='date' class="form-control" type="date" value="2000-01-01" id="example-date-input" required>
                 </div>
                 <div class="form-group input-group input-group-lg">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                      </div>
-                    <input name="" class="form-control" placeholder="Email address" type="email" required>
+                    <input name="email" class="form-control" placeholder="Email address" type="email" required>
                     <div class="invalid-feedback">
                       Please enter valid email.
                     </div>
@@ -84,7 +84,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-credit-card"></i> </span>
                     </div>
-                    <input type="text" class="form-control"  placeholder="Card number" id="cardNumber" required>
+                    <input name="card" type="text" class="form-control"  placeholder="Card number" id="cardNumber" required>
                     <div class="invalid-feedback">
                       Please enter valid card number.
                     </div>
@@ -94,7 +94,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    <input id="myInput" class="form-control" placeholder="Create password" type="password" required>
+                    <input name="pass1" id="myInput" class="form-control" placeholder="Create password" type="password" required>
                     <button type="button">
                         <i onclick="myFunction(this)" class="fa fa-eye"></i>
                     </button>
@@ -107,7 +107,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    <input class="form-control" placeholder="Repeat password" type="password" required>
+                    <input name="pass2" class="form-control" placeholder="Repeat password" type="password" required>
                 </div>
                 <div class="form-group input-group input-group-lg">
                     <div class="input-group-prepend form-check">
@@ -130,22 +130,22 @@
               <div class="container">
                   <ul class="list-unstyled list-inline text-center">
                     <li class="list-inline-item">
-                      <a class="btn-floating btn-fb mx-1 text-light">
+                      <a href="https://www.bitchute.com/video/wknVeQRrFVDQ/" class="btn-floating btn-fb mx-1 text-light">
                         <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
                       </a>
                     </li>
                     <li class="list-inline-item">
-                      <a class="btn-floating btn-tw mx-1 text-light">
+                      <a href="https://www.bitchute.com/video/wknVeQRrFVDQ/" class="btn-floating btn-tw mx-1 text-light">
                         <i class="fa fa-twitter fa-2x"> </i>
                       </a>
                     </li>
                     <li class="list-inline-item">
-                      <a class="btn-floating btn-gplus mx-1 text-light">
+                      <a href="https://www.bitchute.com/video/wknVeQRrFVDQ/" class="btn-floating btn-gplus mx-1 text-light">
                         <i class="fa fa-facebook fa-2x" aria-hidden="true"></i>
                       </a>
                     </li>
                     <li class="list-inline-item">
-                      <a class="btn-floating btn-li mx-1 text-light">
+                      <a href="https://www.bitchute.com/video/wknVeQRrFVDQ/" class="btn-floating btn-li mx-1 text-light">
                         <i class="fa fa-linkedin fa-2x"> </i>
                       </a>
                     </li>
