@@ -5,37 +5,46 @@ from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
 
+
 nickname = None
 user_id = None
+
 
 @app.route('/')
 def red():
    return redirect(url_for('mainpage'))
 
-@app.route('/mainpage', methods = ['GET', 'POST'])
+
+@app.route('/mainpage', methods=['GET', 'POST'])
 def mainpage():
-   global nickname
-   return render_template('mainpage.html', name_c =nickname)
+    global nickname
+    return render_template('mainpage.html', name_c=nickname)
+
 
 @app.route('/cases')
 def cases():
-   global nickname
-   return render_template('insurance_case.html', name_c =nickname)
+    global nickname
+    return render_template('insurance_case.html', name_c=nickname)
+
 
 @app.route('/new_contract')
 def new_contract():
+
    global nickname
    return render_template('flat_form.html', name_c =nickname)
 
+
 @app.route('/contact')
 def contact():
-   global nickname
-   return render_template('contact.html', name_c =nickname)
+    global nickname
+    return render_template('contact.html', name_c=nickname)
+
 
 @app.route('/my_cabinet')
 def my_cabinet():
    global nickname
    return render_template('cabinet.html', name_c =nickname)
+
 
 @app.route('/send')
 def send_email():
@@ -49,8 +58,16 @@ def send_email():
    server.sendmail("cumdickcompany@gmail.com", '8889344@ukr.net', msg)
    return render_template('mainpage.html', name_c =nickname)
 
-@app.route('/login', methods = ['GET', 'POST'])
+
+@app.route('/asswecan')
+def form_health():
+    return render_template('insurance_health_form.html', name_c=nickname)
+
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+
    global user_id
    global nickname
    if request.method == 'GET':
@@ -119,4 +136,5 @@ def logout():
 
 
 if __name__ == '__main__':
-   app.run()
+   app.run(debug=True)
+
