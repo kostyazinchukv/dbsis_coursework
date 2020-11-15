@@ -1,10 +1,11 @@
 from flask import Flask,render_template,redirect,url_for,request
+from config import Config
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
-
+app.config.from_object(Config)
 
 nickname = None
 user_id = None
@@ -73,11 +74,9 @@ def login():
    if request.method == 'GET':
       return render_template('sign_in.html', name_c =nickname)
    elif request.method == 'POST':
-      connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+      connection = psycopg2.PQconnectdb(
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       login_name = request.form['login']
@@ -100,11 +99,9 @@ def login():
 def register():
    global nickname
    if request.method == 'POST':
-      connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+      connection = psycopg2.PQconnectdb(
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       name = request.form['name']
@@ -135,6 +132,6 @@ def logout():
    return render_template('mainpage.html', name_c =nickname)
 
 
-if __name__ == '__main__':
-   app.run(debug=True)
+# if __name__ == '__main__':
+#    app.run(debug=True)
 
