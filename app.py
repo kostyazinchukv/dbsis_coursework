@@ -74,7 +74,7 @@ def login():
    if request.method == 'GET':
       return render_template('sign_in.html', name_c =nickname)
    elif request.method == 'POST':
-      connection = psycopg2.PQconnectdb(
+      connection = psycopg2.connect(
          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
@@ -99,7 +99,7 @@ def login():
 def register():
    global nickname
    if request.method == 'POST':
-      connection = psycopg2.PQconnectdb(
+      connection = psycopg2.connect(
          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True

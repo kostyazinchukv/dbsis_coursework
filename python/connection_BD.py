@@ -113,6 +113,6 @@ if __name__ == '__main__':
 
     #print(get_contract_by_date(datetime.date(2020, 10, 22)))
 
-    print(login('admin_log','123456'))
+    # print(login('admin_log','123456'))
 
     
