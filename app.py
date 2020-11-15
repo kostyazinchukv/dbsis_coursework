@@ -43,7 +43,7 @@ def contact():
 @app.route('/my_cabinet')
 def my_cabinet():
    global nickname
-   return render_template('cabinet.html', name_c =nickname)
+   return render_template('profile_page.html', name_c=nickname)
 
 
 @app.route('/send')
