@@ -130,12 +130,12 @@ begin
 
 	INSERT INTO customers(customer_name,customer_age,customer_email,customer_password,customer_login,bank_card) 
 	VALUES (customer_name_v,customer_age_v,customer_email_v,customer_password_v,customer_login_v,bank_card_v);
-	status := 'Обліковий запис створено!';
+	status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!';
 	
 	return status;
 	exception 
 	   when others then 
-	      status := 'Сталася помилка при створені облікового запису!';
+	      status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!';
 		  return status;
 end;
 $body$
@@ -193,13 +193,13 @@ begin
 	INSERT INTO contracts(fk_customer_id,contract_type,contract_price,contract_end_date) 
 	VALUES (fk_customer_id_v,contract_type_v,contract_price_v,contract_end_date_v);
 	
-	status := 'Страховий контракт створено успішно!';
+	status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!';
 	
 
 	return status;
 	exception 
 	   when others then
-	   	  status := 'Сталася помилка при створені контракту!';
+	   	  status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!';
 		  return status;
 end;
 $body$
@@ -229,13 +229,13 @@ begin
 	INSERT INTO children_contracts(fk_customer_id,child_name,contract_type,contract_price,contract_end_date) 
 	VALUES (fk_customer_id_v,child_name_v,contract_type_v,contract_price_v,contract_end_date_v);
 	
-	status := 'Страховий контракт для дитини створено успішно!';
+	status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!';
 	
 
 	return status;
 	exception 
 	   when others then
-	   	  status := 'Сталася помилка при створені контракту!';
+	   	  status := 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!';
 		  return status;
 end;
 $body$

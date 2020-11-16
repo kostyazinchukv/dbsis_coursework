@@ -1,10 +1,11 @@
 from flask import Flask,render_template,redirect,url_for,request
+from config import Config
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
-
+app.config.from_object(Config)
 
 nickname = None
 user_id = None
@@ -43,7 +44,7 @@ def contact():
 @app.route('/my_cabinet')
 def my_cabinet():
    global nickname
-   return render_template('cabinet.html', name_c =nickname)
+   return render_template('profile_page.html', name_c=nickname)
 
 
 @app.route('/send')
@@ -74,10 +75,8 @@ def login():
       return render_template('sign_in.html', name_c =nickname)
    elif request.method == 'POST':
       connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       login_name = request.form['login']
@@ -101,10 +100,8 @@ def register():
    global nickname
    if request.method == 'POST':
       connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       name = request.form['name']
@@ -135,6 +132,6 @@ def logout():
    return render_template('mainpage.html', name_c =nickname)
 
 
-if __name__ == '__main__':
-   app.run(debug=True)
+# if __name__ == '__main__':
+#    app.run(debug=True)
 
