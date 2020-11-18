@@ -1,11 +1,19 @@
 from flask import Flask,render_template,redirect,url_for,request
-# from config import Config
+<<<<<<< HEAD
+#from config import Config
+=======
+#from config import Config
+>>>>>>> 8add46a36f72d5a70d18f5fac073178e716a0f4e
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
-# app.config.from_object(Config)
+<<<<<<< HEAD
+#app.config.from_object(Config)
+=======
+#app.config.from_object(Config)
+>>>>>>> 8add46a36f72d5a70d18f5fac073178e716a0f4e
 
 nickname = None
 user_id = None
@@ -64,9 +72,9 @@ def send_email():
    return render_template('mainpage.html', name_c =nickname)
 
 
-@app.route('/asswecan')
-def form_health():
-    return render_template('insurance_health_form.html', name_c=nickname)
+@app.route('/asswecan/<price>')
+def form_health(price):
+    return render_template('insurance_health_form.html', name_c=nickname, price=price)
 
 
 
@@ -126,6 +134,7 @@ def register():
          return render_template('registration.html', name_c =nickname)
    if request.method == 'GET':
       return render_template('registration.html', name_c =nickname)
+
 
 @app.route('/logout')
 def logout():

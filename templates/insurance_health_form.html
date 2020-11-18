@@ -1,100 +1,249 @@
 {%extends 'jinja_forms.html'%}
 {% block content %}
-<div class="container">
-    <div class="card bg-light">
-    <article class="card-body mx-auto" style="max-width: 600px;">
-        <h4 class="card-title mt-3 text-center">Create Account</h4>
-        <form action="{{url_for('form_health')}}" method="post" class="needs-validation" novalidate>
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i>Name</i> </span>
-             </div>
-            <input name="name" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Full name" type="text" required >
-            <div class="invalid-feedback">
-              Please enter valid name.
-            </div>
-        </div>
+    <div class="container">
+        <div class="card bg-light">
+            <article class="card-body mx-auto" style="max-width: 800px;">
+                <h3 class="card-title mt-3 text-center">Страхування життя</h3>
+                <form action="{{url_for('form_health', price = 'basic')}}" method="post" class="needs-validation" novalidate>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend form-check">
 
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i>Surname</i> </span>
-             </div>
-            <input name="surname" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Surname" type="text" required >
-            <div class="invalid-feedback">
-              Please enter valid surname.
-            </div>
-        <div class="form-group input-group input-group-lg">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"> <i>Patronymic</i> </span>
-                 </div>
-                <input name="patronymic" class="form-control" pattern="[a-zA-Z0-9 ]+" placeholder="Patronymic" type="text" required >
-                <div class="invalid-feedback">
-                  Please enter valid Patronymic.
-            </div>
+                              <label style="text-align: center" class="form-check-label" for="defaultCheck2">
+                                Будь ласка, для правильного опрацювання даних просимо Вас вводити всю інформацію
+                                виключно англійською мовою. Дякуємо за розуміння!
+                              </label>
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Ваш тариф </span>
+                         </div>
+                        <input name ='tariff' class="form-control" type="text" value="{{price}}" id="tariff"
+                               readonly>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Ціна </span>
+                         </div>
+                        {%if price == 'basic'%}
+                        <input name ='tar_price' class="form-control" type="text" value="80грн/день" id="price_tar_b"
+                               readonly>
+                        {%elif price == 'medium'%}
+                        <input name ='tar_price' class="form-control" type="text" value="150грн/день" id="price_tar_m"
+                               readonly>
+                        {%elif price == 'pro'%}
+                        <input name ='tar_price' class="form-control" type="text" value="220грн/день" id="price_tar_p"
+                               readonly>
+                        {% endif %}
+                    </div>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії договору
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата початку дії </span>
+                         </div>
+                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" id="example-date-input"
+                               required>
+                    </div>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
+                        Ідентифікаційні дані клієнта
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Email</span>
+                         </div>
+                        <input name="email" class="form-control" type="email" required>
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний email!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Прізвище </span>
+                         </div>
+                        <input name="second_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильне прізвище!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Ім'я </span>
+                         </div>
+                        <input name="first_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильне ім'я!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> По батькові </span>
+                         </div>
+                        <input name="third_name_kekw" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильне ім'я по батькові!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Номер телефону </span>
+                         </div>
+                        <input name="phone" class="form-control" type="tel" id="phone" required>
+                        <div class="invalid-feedback">
+                          Будь ласка введіть існуючий номер телефону!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Індивідуальний податковий номер </span>
+                         </div>
+                        <input name="id_number" class="form-control"
+                               pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" type="text" maxlength="10"
+                               required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний податковий номер!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата народження </span>
+                         </div>
+                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="example-e-input"
+                               required>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Серія і номер паспорту </span>
+                         </div>
+                        <input name="passport" class="form-control" pattern="[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]"
+                               maxlength="8" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну серію паспорту!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Орган, що видав </span>
+                         </div>
+                        <input name="cumpany" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильне прізвище!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата видання </span>
+                         </div>
+                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
+                               required>
+                    </div>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про місце проживання клієнта
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Область </span>
+                         </div>
+                        <select name="region" class="custom-select form-control" id="inputGroupSelect02">
+                            <option selected>Виберіть область</option>
+                            <option value="1">Cherkasy Oblast</option>
+                            <option value="2">Chernihiv Oblast</option>
+                            <option value="3">Chernivtsi Oblast</option>
+                            <option value="4">Dnipropetrovsk Oblast</option>
+                            <option value="5">Donetsk Oblast</option>
+                            <option value="6">Ivano-Frankivsk Oblast</option>
+                            <option value="7">Kharkiv Oblast</option>
+                            <option value="8">Kherson Oblast</option>
+                            <option value="9">Khmelnytskyi Oblast</option>
+                            <option value="10">Kyiv Oblast</option>
+                            <option value="11">Kirovohrad Oblast</option>
+                            <option value="12">Luhansk Oblast</option>
+                            <option value="13">Lviv Oblast</option>
+                            <option value="14">Mykolaiv Oblast</option>
+                            <option value="15">Odessa Oblast</option>
+                            <option value="16">Poltava Oblast</option>
+                            <option value="17">Rivne Oblast</option>
+                            <option value="18">Sumy Oblast</option>
+                            <option value="19">Ternopil Oblast</option>
+                            <option value="20">Vinnytsia Oblast</option>
+                            <option value="21">Volyn Oblast</option>
+                            <option value="22">Zakarpattia Oblast</option>
+                            <option value="23">Zaporizhzhia Oblast	</option>
+                            <option value="24">Zhytomyr Oblast</option>
+                            <option value="25">Autonomous Republic of Crimea</option>
+                          </select>
 
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class=>Age</i> </span>
-             </div>
-            <input name ='age' class="form-control" type="text" value="18" id="example-age-input" required>
-        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Район/місто </span>
+                         </div>
+                        <input name="city" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну назву района або міста!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Населений пункт</span>
+                         </div>
+                        <input name="town" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну назву населеного пункту!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Індекс </span>
+                         </div>
+                        <input name="index" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9]"
+                               type="text" maxlength="5" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний індекс!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Вулиця, будинок </span>
+                         </div>
+                        <input name="street" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну адресу!
+                        </div>
+                    </div>
 
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i >Email</i> </span>
-             </div>
-            <input name="email" class="form-control" placeholder="some@some.com" type="email" required>
-            <div class="invalid-feedback">
-              Please enter valid email.
-            </div>
-        </div>
-        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
-
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i >Phone</i> </span>
-             </div>
-            <input name="text" class="form-control" placeholder="+380XXXXXXXXX" type="text" required>
-            <div class="invalid-feedback">
-              Please enter valid phone.
-            </div>
-        </div>
 
 
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-            </div>
-            <input name="pass1" id="myInput" class="form-control" placeholder="Create password" type="password" required>
-            <button type="button">
-                <i onclick="myFunction(this)" class="fa fa-eye"></i>
-            </button>
-<!--                    <input type="checkbox" onclick="myFunction()">-->
+
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
+                        Прийняття індивідуальної пропозиції
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend form-check">
+                              <input name="check" class="form-check-input" type="checkbox" value="" id="defaultCheck2"
+                                     required>
+                              <label class="form-check-label" for="defaultCheck2">
+                                Підтверджую, що з умовами індивідуальної пропозиції згоден. З Правилами
+                                ознайомлений(-а). Надаю дозвіл на обробку моїх персональних даних. Підтверджую
+                                правильність даних для ідентифікації, що внесені мною. Підтверждую, що я не є
+                                публічною особою, згідно до Законодавства України
+                              </label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group " id="submit_button">
+                        <button type="submit" class="btn btn-primary btn-block"> Insure  </button>
+                    </div>
+                </form>
+            </article>
         </div>
-        <small id="passwordHelpBlock" class="form-text text-muted">
-          Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
-        </small>
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-            </div>
-            <input name="pass2" class="form-control" placeholder="Repeat password" type="password" required>
-        </div>
-        <div class="form-group input-group input-group-lg">
-            <div class="input-group-prepend form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" required>
-                  <label class="form-check-label" for="defaultCheck1">
-                    I give permission for the processing of my personal data
-                  </label>
-            </div>
-        </div>
-        <div class="form-group " id="submit_button">
-            <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
-        </div>
-        <p style="margin-bottom: 3px" class="text-center">Have an account? <a href="">Log In</a> </p>
-        <p class="text-center"><a href="" >Forgot your password?</a></p>
-        </form>
-    </article>
     </div>
-</div>
+    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/jquery.maskedinput.min.js') }}"></script>
+    <script>
+    $(function(){
+      $("#phone").mask("+38(999) 999-99-99");
+    });
+    </script>
 {% endblock %}
