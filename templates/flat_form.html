@@ -4,7 +4,7 @@
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
                 <h3 class="card-title mt-3 text-center">Страхування квартири</h3>
-                <form action="{{url_for('new_contract', price='default')}}" method="post" class="needs-validation" novalidate>
+                <form action="{{url_for('new_contract', price='default')}}" method="post" id="cum" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -16,24 +16,10 @@
                     </div>
                     {% if price != 'default' %}
                     <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend form-check">
-                            {% if price == 'beginner' %}
-                              <label style="text-align: center" class="form-check-label" for="defaultCheck2">
-                                Ви обрали наступний тип тарифу: початковий
-                              </label>
-                            {% endif %}
-                            {% if price == 'plusplus' %}
-                              <label style="text-align: center" class="form-check-label" for="defaultCheck2">
-                                Ви обрали наступний тип тарифу: продвинутий
-                              </label>
-                            {% endif %}
-                            {% if price == 'pro' %}
-                              <label style="text-align: center" class="form-check-label" for="defaultCheck2">
-                                Ви обрали наступний тип тарифу: максимальний
-                              </label>
-                            {% endif %}
-
-                        </div>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Ваш тариф </span>
+                         </div>
+                        <input name="tarif" value="{{price}}" class="form-control"  type="text" readonly>
                     </div>
                     {% endif %}
                     <div class="form-group input-group input-group-lg">
@@ -53,7 +39,7 @@
                             <span class="input-group-text"> Область </span>
                          </div>
                         <select name="region" class="custom-select form-control" id="inputGroupSelect02">
-                            <option selected>Виберіть область</option>
+                            <option selected>Autonomous Republic of Crimea</option>
                             <option value="1">Cherkasy Oblast</option>
                             <option value="2">Chernihiv Oblast</option>
                             <option value="3">Chernivtsi Oblast</option>
@@ -78,7 +64,6 @@
                             <option value="22">Zakarpattia Oblast</option>
                             <option value="23">Zaporizhzhia Oblast	</option>
                             <option value="24">Zhytomyr Oblast</option>
-                            <option value="25">Autonomous Republic of Crimea</option>
                           </select>
 
                     </div>
@@ -210,7 +195,7 @@
                             <span class="input-group-text"> Область </span>
                          </div>
                         <select name ='region_address' class="custom-select form-control" id="inputGroupSelect01">
-                            <option selected>Виберіть область</option>
+                            <option selected>Autonomous Republic of Crimea</option>
                             <option value="1">Cherkasy Oblast</option>
                             <option value="2">Chernihiv Oblast</option>
                             <option value="3">Chernivtsi Oblast</option>
@@ -235,7 +220,6 @@
                             <option value="22">Zakarpattia Oblast</option>
                             <option value="23">Zaporizhzhia Oblast	</option>
                             <option value="24">Zhytomyr Oblast</option>
-                            <option value="25">Autonomous Republic of Crimea</option>
                           </select>
 
                     </div>
@@ -311,9 +295,9 @@
                           Будь ласка введіть існуючий номер телефону!
                         </div>
                     </div>
-
                     <div class="form-group " id="submit_button">
-                        <button type="submit" class="btn btn-primary btn-block"> Відправити поліс на e-mail  </button>
+                        <button type="submit" class="btn btn-primary btn-block" id='send'>
+                           Оплата та відправка полісу  </button>
                     </div>
                     <p style="margin-bottom: 3px" class="text-center">Have an account? <a href="">Log In</a> </p>
                     <p class="text-center"><a href="" >Forgot your password?</a></p>
