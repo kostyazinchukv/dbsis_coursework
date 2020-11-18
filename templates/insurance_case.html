@@ -14,10 +14,15 @@
            <nav class="site-header sticky-top py-1 navbar navbar-dark bg-dark">
               <div class="container d-flex flex-column flex-md-row justify-content-between">
                 <a class="py-2" href="{{url_for('mainpage')}}" aria-label="Product">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto text-light" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                       stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                       class="d-block mx-auto text-light" viewBox="0 0 24 24" focusable="false">
+                    <title>Product</title><circle cx="12" cy="12" r="10"/>
+                    <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/>
+                  </svg>
                 </a>
                 <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('cases')}}">Страховий випадок</a>
-                <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('new_contract')}}">Оформити страховку</a>
+                <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('new_contract', price='default')}}">Оформити страховку</a>
                 <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('contact')}}">Контакти</a>
                   {% if  name_c is not none%}
                     <a class="py-2 d-none d-md-inline-block text-light" href="{{url_for('my_cabinet')}}"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Особистий кабінет ({{name_c}})</a>
@@ -63,7 +68,7 @@
                           <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Free Subdomain</li>
                           <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Monthly Status Reports</li>
                         </ul>
-                        <a href="{{url_for('new_contract')}}" class="btn btn-block btn-primary text-uppercase">Button</a>
+                        <a href="{{url_for('new_contract', price='beginner')}}" class="btn btn-block btn-primary text-uppercase">Button</a>
                       </div>
                     </div>
                   </div>
@@ -84,7 +89,7 @@
                           <li><span class="fa-li"><i class="fa fa-check"></i></span>Free Subdomain</li>
                           <li class="text-muted"><span class="fa-li"><i class="fa fa-times"></i></span>Monthly Status Reports</li>
                         </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Button</a>
+                        <a href="{{url_for('new_contract', price='plusplus')}}" class="btn btn-block btn-primary text-uppercase">Button</a>
                       </div>
                     </div>
                   </div>
@@ -105,7 +110,7 @@
                           <li><span class="fa-li"><i class="fa fa-check"></i></span><strong>Unlimited</strong> Free Subdomains</li>
                           <li><span class="fa-li"><i class="fa fa-check"></i></span>Monthly Status Reports</li>
                         </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Button</a>
+                        <a href="{{url_for('new_contract', price='pro')}}" class="btn btn-block btn-primary text-uppercase">Button</a>
                       </div>
                     </div>
                   </div>
