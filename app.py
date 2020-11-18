@@ -28,10 +28,15 @@ def cases():
     return render_template('insurance_case.html', name_c=nickname)
 
 
-@app.route('/new_contract/<price>')
+@app.route('/new_contract/<price>', methods=['GET', 'POST'])
 def new_contract(price):
    global nickname
-   return render_template('flat_form.html', name_c=nickname, price=price)
+   if request.method == 'GET':
+      return render_template('flat_form.html', name_c=nickname, price=price)
+   else:
+      area = int(request.form['area'])
+      price = request.form['tarif']
+      return render_template('payment.html', name_c=nickname, price=price, area=area)
 
 
 @app.route('/contact')
