@@ -1,19 +1,15 @@
 from flask import Flask,render_template,redirect,url_for,request
-<<<<<<< HEAD
+
 #from config import Config
-=======
-#from config import Config
->>>>>>> 8add46a36f72d5a70d18f5fac073178e716a0f4e
+
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
-<<<<<<< HEAD
+
 #app.config.from_object(Config)
-=======
-#app.config.from_object(Config)
->>>>>>> 8add46a36f72d5a70d18f5fac073178e716a0f4e
+
 
 nickname = None
 user_id = None
