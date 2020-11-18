@@ -3,8 +3,8 @@
     <div class="container">
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
-                <h3 class="card-title mt-3 text-center">Страхування життя</h3>
-                <form action="{{url_for('form_health', price = 'basic')}}" method="post" class="needs-validation" novalidate>
+                <h3 class="card-title mt-3 text-center">Страхування квартири</h3>
+                <form action="{{url_for('new_contract', price='default')}}" method="post" id="cum" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -14,27 +14,95 @@
                               </label>
                         </div>
                     </div>
+                    {% if price != 'default' %}
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Ваш тариф </span>
+                            <span class="input-group-text"> Ваш тариф </span>
                          </div>
-                        <input name ='tariff' class="form-control" type="text" value="{{price}}" id="tariff"
-                               readonly>
+                        <input name="tarif" value="{{price}}" class="form-control"  type="text" readonly>
+                    </div>
+                    {% endif %}
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Площа </span>
+                         </div>
+                        <input name="area" class="form-control" pattern="[a-zA-Z0-9 ]+" type="number" min="10"
+                               max="500" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну площу квартири!
+                        </div>
+                    </div>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про адресу квартири
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Область </span>
+                         </div>
+                        <select name="region" class="custom-select form-control" id="inputGroupSelect02">
+                            <option selected>Autonomous Republic of Crimea</option>
+                            <option value="1">Cherkasy Oblast</option>
+                            <option value="2">Chernihiv Oblast</option>
+                            <option value="3">Chernivtsi Oblast</option>
+                            <option value="4">Dnipropetrovsk Oblast</option>
+                            <option value="5">Donetsk Oblast</option>
+                            <option value="6">Ivano-Frankivsk Oblast</option>
+                            <option value="7">Kharkiv Oblast</option>
+                            <option value="8">Kherson Oblast</option>
+                            <option value="9">Khmelnytskyi Oblast</option>
+                            <option value="10">Kyiv Oblast</option>
+                            <option value="11">Kirovohrad Oblast</option>
+                            <option value="12">Luhansk Oblast</option>
+                            <option value="13">Lviv Oblast</option>
+                            <option value="14">Mykolaiv Oblast</option>
+                            <option value="15">Odessa Oblast</option>
+                            <option value="16">Poltava Oblast</option>
+                            <option value="17">Rivne Oblast</option>
+                            <option value="18">Sumy Oblast</option>
+                            <option value="19">Ternopil Oblast</option>
+                            <option value="20">Vinnytsia Oblast</option>
+                            <option value="21">Volyn Oblast</option>
+                            <option value="22">Zakarpattia Oblast</option>
+                            <option value="23">Zaporizhzhia Oblast	</option>
+                            <option value="24">Zhytomyr Oblast</option>
+                          </select>
+
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Ціна </span>
+                            <span class="input-group-text"> Район/місто </span>
                          </div>
-                        {%if price == 'basic'%}
-                        <input name ='tar_price' class="form-control" type="text" value="80грн/день" id="price_tar_b"
-                               readonly>
-                        {%elif price == 'medium'%}
-                        <input name ='tar_price' class="form-control" type="text" value="150грн/день" id="price_tar_m"
-                               readonly>
-                        {%elif price == 'pro'%}
-                        <input name ='tar_price' class="form-control" type="text" value="220грн/день" id="price_tar_p"
-                               readonly>
-                        {% endif %}
+                        <input name="city" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну назву района або міста!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Населений пункт</span>
+                         </div>
+                        <input name="town" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну назву населеного пункту!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Індекс </span>
+                         </div>
+                        <input name="index" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9]"
+                               type="text" maxlength="5" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний індекс!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Вулиця, місто, будинок </span>
+                         </div>
+                        <input name="street" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну адресу!
+                        </div>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії договору
                     </h5>
@@ -46,17 +114,8 @@
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
-                        Ідентифікаційні дані клієнта
+                        Ідентифікаційні дані власника квартири
                     </h5>
-                    <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> Email</span>
-                         </div>
-                        <input name="email" class="form-control" type="email" required>
-                        <div class="invalid-feedback">
-                          Будь ласка, введіть правильний email!
-                        </div>
-                    </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Прізвище </span>
@@ -82,15 +141,6 @@
                         <input name="third_name_kekw" class="form-control" pattern="[a-zA-Z]+" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне ім'я по батькові!
-                        </div>
-                    </div>
-                    <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> Номер телефону </span>
-                         </div>
-                        <input name="phone" class="form-control" type="tel" id="phone" required>
-                        <div class="invalid-feedback">
-                          Будь ласка введіть існуючий номер телефону!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
@@ -137,14 +187,15 @@
                         <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
                                required>
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про місце проживання клієнта
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
+                        Ідентифікаційні дані (адреса) власника квартири
                     </h5>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Область </span>
                          </div>
-                        <select name="region" class="custom-select form-control" id="inputGroupSelect02">
-                            <option selected>Виберіть область</option>
+                        <select name ='region_address' class="custom-select form-control" id="inputGroupSelect01">
+                            <option selected>Autonomous Republic of Crimea</option>
                             <option value="1">Cherkasy Oblast</option>
                             <option value="2">Chernihiv Oblast</option>
                             <option value="3">Chernivtsi Oblast</option>
@@ -169,7 +220,6 @@
                             <option value="22">Zakarpattia Oblast</option>
                             <option value="23">Zaporizhzhia Oblast	</option>
                             <option value="24">Zhytomyr Oblast</option>
-                            <option value="25">Autonomous Republic of Crimea</option>
                           </select>
 
                     </div>
@@ -177,7 +227,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Район/місто </span>
                          </div>
-                        <input name="city" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="city_address" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву района або міста!
                         </div>
@@ -186,7 +236,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Населений пункт</span>
                          </div>
-                        <input name="town" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="town_address" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву населеного пункту!
                         </div>
@@ -195,7 +245,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Індекс </span>
                          </div>
-                        <input name="index" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9]"
+                        <input name="index_address" class="form-control" pattern="[0-9][0-9][0-9][0-9][0-9]"
                                type="text" maxlength="5" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильний індекс!
@@ -203,17 +253,22 @@
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Вулиця, будинок </span>
+                            <span class="input-group-text"> Вулиця, місто, будинок </span>
                          </div>
-                        <input name="street" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
+                        <input name="street_address" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну адресу!
                         </div>
                     </div>
-
-
-
-
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Email</span>
+                         </div>
+                        <input name="email" class="form-control" type="email" required>
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний email!
+                        </div>
+                    </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
                         Прийняття індивідуальної пропозиції
                     </h5>
@@ -229,17 +284,28 @@
                               </label>
                         </div>
                     </div>
-
-
-
-                    <div class="form-group " id="submit_button">
-                        <button type="submit" class="btn btn-primary btn-block"> Insure  </button>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Телефон
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Номер телефону </span>
+                         </div>
+                        <input name="phone" class="form-control" type="tel" id="phone" required>
+                        <div class="invalid-feedback">
+                          Будь ласка введіть існуючий номер телефону!
+                        </div>
                     </div>
+                    <div class="form-group " id="submit_button">
+                        <button type="submit" class="btn btn-primary btn-block" id='send'>
+                           Оплата та відправка полісу  </button>
+                    </div>
+                    <p style="margin-bottom: 3px" class="text-center">Have an account? <a href="">Log In</a> </p>
+                    <p class="text-center"><a href="" >Forgot your password?</a></p>
                 </form>
             </article>
         </div>
     </div>
-    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
+
     <script src="{{ url_for('static', filename = 'js/jquery.maskedinput.min.js') }}"></script>
     <script>
     $(function(){

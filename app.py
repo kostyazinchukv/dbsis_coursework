@@ -1,9 +1,14 @@
 from flask import Flask,render_template,redirect,url_for,request
+
+from config import Config
+
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
+
+app.config.from_object(Config)
 
 
 nickname = None
@@ -27,11 +32,15 @@ def cases():
     return render_template('insurance_case.html', name_c=nickname)
 
 
-@app.route('/new_contract')
-def new_contract():
-
+@app.route('/new_contract/<price>', methods=['GET', 'POST'])
+def new_contract(price):
    global nickname
-   return render_template('flat_form.html', name_c =nickname)
+   if request.method == 'GET':
+      return render_template('flat_form.html', name_c=nickname, price=price)
+   else:
+      area = int(request.form['area'])
+      price = request.form['tarif']
+      return render_template('payment.html', name_c=nickname, price=price, area=area)
 
 
 @app.route('/contact')
@@ -43,7 +52,7 @@ def contact():
 @app.route('/my_cabinet')
 def my_cabinet():
    global nickname
-   return render_template('cabinet.html', name_c =nickname)
+   return render_template('profile_page.html', name_c=nickname)
 
 
 @app.route('/send')
@@ -59,9 +68,9 @@ def send_email():
    return render_template('mainpage.html', name_c =nickname)
 
 
-@app.route('/asswecan')
-def form_health():
-    return render_template('insurance_health_form.html', name_c=nickname)
+@app.route('/asswecan/<price>')
+def form_health(price):
+    return render_template('insurance_health_form.html', name_c=nickname, price=price)
 
 
 
@@ -74,10 +83,8 @@ def login():
       return render_template('sign_in.html', name_c =nickname)
    elif request.method == 'POST':
       connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       login_name = request.form['login']
@@ -101,10 +108,8 @@ def register():
    global nickname
    if request.method == 'POST':
       connection = psycopg2.connect(
-         host="localhost",
-         database="project",
-         user="postgres",
-         password="postgresql")
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
       connection.autocommit = True
 
       name = request.form['name']
@@ -125,6 +130,7 @@ def register():
          return render_template('registration.html', name_c =nickname)
    if request.method == 'GET':
       return render_template('registration.html', name_c =nickname)
+
 
 @app.route('/logout')
 def logout():
