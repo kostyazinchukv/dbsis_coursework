@@ -39,13 +39,11 @@ def my_cabinet():
 
 @app.route('/send')
 def send_email():
-   #global nickname
-   #global user_id
-   #em = get_customer_info(user_id)[2]
-   msg = 'Test'
+
+   msg = 'Ya suka zaibavsa prosto blyat yebicheski z cimi e-mailamy'
    server = smtplib.SMTP("smtp.gmail.com", 587)
    server.starttls()
-   server.login("cumdickcompany@gmail.com", "CumDickCum")
+   server.login("cumdickcompany@gmail.com", "DickCumDick")
    server.sendmail("cumdickcompany@gmail.com", '8889344@ukr.net', msg)
    return render_template('mainpage.html', name_c =nickname)
 
