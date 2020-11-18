@@ -7,7 +7,9 @@
     margin-top: 20px;
 }
 footer{
-  margin-top:auto;
+    margin-top:auto;
+
+    background: PapayaWhip;
 }
 
 /* Trick */
@@ -18,4 +20,3 @@ body{
 body{ height:100vh; margin:0; }
 
 header{ min-height:50px; background:lightcyan; }
-footer{ min-height:50px; background:PapayaWhip; }
