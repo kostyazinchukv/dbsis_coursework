@@ -28,11 +28,10 @@ def cases():
     return render_template('insurance_case.html', name_c=nickname)
 
 
-@app.route('/new_contract')
-def new_contract():
-
+@app.route('/new_contract/<price>')
+def new_contract(price):
    global nickname
-   return render_template('flat_form.html', name_c =nickname)
+   return render_template('flat_form.html', name_c=nickname, price=price)
 
 
 @app.route('/contact')
