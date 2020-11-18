@@ -1,0 +1,48 @@
+{%extends 'jinja_forms.html'%}
+{% block content %}
+    <div class="container">
+        <div class="card bg-light">
+            <article class="card-body mx-auto" style="max-width: 800px;">
+                <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend form-check">
+                              <h5 style="text-align: center" class="form-check-label">
+                                Ціна вашої страховки: {% if price == 'beginner' %} {{ area*1.2 }} {% endif %}
+                                  {% if price == 'plusplus' %} {{ area*1.5 }} {% endif %}
+                                  {% if price == 'pro' %} {{ area*2 }} {% endif %}
+                              </h5>
+                        </div>
+                    </div>
+                <div style='margin-top: 20px' class="form-group ">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Відправити поліс на e-mail </button>
+                </div>
+                <div class="form-group " id="submit_button">
+                    <button type="button" class="btn btn-primary btn-block" id='send'  data-toggle="modal"
+                            data-target="#exampleModalCenter">
+                        Оплатити  </button>
+                </div>
+
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Оплата</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Будь ласка, підтвердіть оплату полісу!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Відхилити</button>
+                    <button type="button" class="btn btn-primary">Підтвердити</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            </article>
+        </div>
+    </div>
+{% endblock %}
