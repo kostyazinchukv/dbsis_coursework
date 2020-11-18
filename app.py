@@ -1,12 +1,12 @@
 from flask import Flask,render_template,redirect,url_for,request
-# from config import Config
+from config import Config
 import smtplib
 import psycopg2
 from python.connection_BD import registration,login_user,get_customer_info
 
 app = Flask(__name__)
-# app.config.from_object(Config)
-#
+app.config.from_object(Config)
+
 nickname = None
 user_id = None
 
