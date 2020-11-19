@@ -33,7 +33,7 @@ def create_child_contract(child_name, fk_customer_id, contract_type, contract_pr
     return status
 
 
-def create_contract(fk_customer_id, contract_type, contract_price, contract_end_date):
+def create_contract(fk_customer_id, contract_type, contract_price, contract_end_date, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
     
@@ -44,22 +44,23 @@ def create_contract(fk_customer_id, contract_type, contract_price, contract_end_
     return status
 
 
-def get_customer_info(customer_id):
+def get_customer_info(customer_id, connection):
     'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку)'
     cursor = connection.cursor()
-    
-    cursor.callproc('get_customer_info', (customer_id))
+
+    cursor.execute(f"SELECT get_customer_info({customer_id})")
+
     
     result = cursor.fetchall()[0]
     
     return result
 
 
-def get_contract_by_cust(customer_id):
+def get_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
-    
-    cursor.callproc('get_contract_by_cust', (customer_id))
+
+    cursor.execute(f"SELECT get_contract_by_cust({customer_id})")
     
     result = cursor.fetchall()[0]
     
@@ -109,6 +110,7 @@ if __name__ == '__main__':
         password="postgresql")
     connection.autocommit = True
 
+    print(get_contract_by_cust(15,connection))
     #print(create_contract(2, 'SS', 14.88, '2020-10-22'))
 
     #print(get_contract_by_date(datetime.date(2020, 10, 22)))
