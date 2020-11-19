@@ -1,10 +1,10 @@
 from flask import Flask,render_template,redirect,url_for,request
-
+#from datetime import date
 from config import Config
 
 import smtplib
 import psycopg2
-from python.connection_BD import registration,login_user,get_customer_info
+from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract
 
 app = Flask(__name__)
 
@@ -35,11 +35,32 @@ def cases():
 @app.route('/new_contract/<price>', methods=['GET', 'POST'])
 def new_contract(price):
    global nickname
-   if request.method == 'GET':
+   global user_id
+
+   if request.method == 'GET' or user_id == None:
       return render_template('flat_form.html', name_c=nickname, price=price)
    else:
+      connection = psycopg2.connect(
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
+      connection.autocommit = True
+
       area = int(request.form['area'])
       price = request.form['tarif']
+      email_user = request.form['email']
+      print(price)
+
+      if price == 'beginner':
+         real_price = int(area) * 1.2
+      elif price == 'plusplus':
+         real_price = int(area) * 1.5
+      elif price == 'pro':
+         real_price = int(area) * 2
+      else:
+         raise Exception
+
+      create_contract(user_id, price, real_price, '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      send_email(email_user)
       return render_template('payment.html', name_c=nickname, price=price, area=area)
 
 
@@ -51,18 +72,39 @@ def contact():
 
 @app.route('/my_cabinet')
 def my_cabinet():
+   connection = psycopg2.connect(
+      app.config['SQLALCHEMY_DATABASE_URI']
+      )
+   connection.autocommit = True
    global nickname
-   return render_template('profile_page.html', name_c=nickname)
+   (customer_id, full_name, age, email, passw, login, bank) = get_customer_info(user_id,connection)[0][1:-1].split(',')
+
+   contracts = get_contract_by_cust(customer_id, connection)
+   print(contracts)
+   ins_types = []
+   ins_exps = []
+   if contracts[0] != None:
+      for tup in contracts:
+         real_tup =tup[1:-1].split(',')
+         print(real_tup)
+         ins_types.append(real_tup[3])
+         ins_exps.append(real_tup[5])
+   else:
+      ins_types = ['Незадано']
+      ins_exps = ['Незадано']
+   return render_template('profile_page.html', name_c=nickname, full_name = full_name, age = age, email=email,ins_types = ins_types, ins_exps = ins_exps)
 
 
-@app.route('/send')
-def send_email():
-
-   msg = 'Ya suka zaibavsa prosto blyat yebicheski z cimi e-mailamy'
+#@app.route('/send', methods=['GET','POST'])
+def send_email(email):
+   global nickname
+   if request.method == 'GET':
+      return render_template('mainpage.html', name_c=nickname)
+   msg = 'Tut bude infa pro polis (sorry, ne vstyg zapility)'
    server = smtplib.SMTP("smtp.gmail.com", 587)
    server.starttls()
    server.login("cumdickcompany@gmail.com", "DickCumDick")
-   server.sendmail("cumdickcompany@gmail.com", '8889344@ukr.net', msg)
+   server.sendmail("cumdickcompany@gmail.com", email, msg)
    return render_template('mainpage.html', name_c =nickname)
 
 
