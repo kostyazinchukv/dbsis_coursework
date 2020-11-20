@@ -61,7 +61,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Прізвище </span>
                          </div>
-                        <input name="second_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <input name="second_name" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне прізвище!
                         </div>
@@ -108,7 +108,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата народження </span>
                          </div>
-                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="example-e-input"
+                        <input name ='birthday' class="form-control" type="date" max = "" value="2000-01-01" id="example-e-input"
                                required>
                     </div>
                     <div class="form-group input-group input-group-lg">
@@ -127,14 +127,14 @@
                          </div>
                         <input name="cumpany" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
-                          Будь ласка, введіть правильне прізвище!
+                          Будь ласка, введіть правильну назву органу, що видав!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата видання </span>
                          </div>
-                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
+                        <input name ='date_of_issue' class="form-control" type="date" max = "" value="2000-01-01" id="example-a-input"
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про місце проживання клієнта
@@ -260,5 +260,9 @@
    today = y+'-'+m+'-'+d;
       document. getElementById("example-date-input").setAttribute("min", today);
       document. getElementById("example-date-input").setAttribute("value", today);
+      document. getElementById("example-a-input").setAttribute("max", today);
+  min_birth_date = today = y-14+'-'+m+'-'+d;
+      document. getElementById("example-e-input").setAttribute("max", min_birth_date);
+
 </script>
 {% endblock %}
