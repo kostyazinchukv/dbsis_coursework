@@ -42,7 +42,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата початку дії </span>
                          </div>
-                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" id="example-date-input"
+                        <input name ='begin_date' class="form-control" type="date" min = "00-00-0000" value="2000-01-01" id="example-date-input"
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
@@ -246,4 +246,19 @@
       $("#phone").mask("+38(999) 999-99-99");
     });
     </script>
+    <script>
+      n = new Date();
+      y = n. getFullYear();
+      m = n. getMonth() + 1;
+      d = n. getDate();
+      if(d<10){
+       d='0'+d
+   }
+   if(m<10){
+       m='0'+m
+   }
+   today = y+'-'+m+'-'+d;
+      document. getElementById("example-date-input").setAttribute("min", today);
+      document. getElementById("example-date-input").setAttribute("value", today);
+</script>
 {% endblock %}
