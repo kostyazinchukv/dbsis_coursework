@@ -4,7 +4,7 @@
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
                 <h3 class="card-title mt-3 text-center">Страхування життя</h3>
-                <form action="{{url_for('form_health', price = 'basic')}}" method="post" class="needs-validation" novalidate>
+                <form action="{{url_for('form_health', price = 'beginner')}}" method="post" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -25,14 +25,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Ціна </span>
                          </div>
-                        {%if price == 'basic'%}
-                        <input name ='tar_price' class="form-control" type="text" value="80грн/день" id="price_tar_b"
+                        {%if price == 'beginner'%}
+                        <input name ='tar_price' class="form-control" type="text" value="34грн/день" id="price_tar_b"
                                readonly>
-                        {%elif price == 'medium'%}
-                        <input name ='tar_price' class="form-control" type="text" value="150грн/день" id="price_tar_m"
+                        {%elif price == 'plusplus'%}
+                        <input name ='tar_price' class="form-control" type="text" value="45грн/день" id="price_tar_m"
                                readonly>
                         {%elif price == 'pro'%}
-                        <input name ='tar_price' class="form-control" type="text" value="220грн/день" id="price_tar_p"
+                        <input name ='tar_price' class="form-control" type="text" value="60грн/день" id="price_tar_p"
                                readonly>
                         {% endif %}
                     </div>
@@ -42,7 +42,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата початку дії </span>
                          </div>
-                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" id="example-date-input"
+                        <input name ='begin_date' class="form-control" type="date" min = "00-00-0000" value="2000-01-01" id="example-date-input"
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
@@ -61,7 +61,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Прізвище </span>
                          </div>
-                        <input name="second_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <input name="second_name" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне прізвище!
                         </div>
@@ -108,7 +108,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата народження </span>
                          </div>
-                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="example-e-input"
+                        <input name ='birthday' class="form-control" type="date" max = "" value="2000-01-01" id="example-e-input"
                                required>
                     </div>
                     <div class="form-group input-group input-group-lg">
@@ -127,14 +127,14 @@
                          </div>
                         <input name="cumpany" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
-                          Будь ласка, введіть правильне прізвище!
+                          Будь ласка, введіть правильну назву органу, що видав!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата видання </span>
                          </div>
-                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
+                        <input name ='date_of_issue' class="form-control" type="date" max = "" value="2000-01-01" id="example-a-input"
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про місце проживання клієнта
@@ -246,4 +246,24 @@
       $("#phone").mask("+38(999) 999-99-99");
     });
     </script>
+    <script>
+      document.title = "Страхування життя";
+      n = new Date();
+      y = n. getFullYear();
+      m = n. getMonth() + 1;
+      d = n. getDate();
+      if(d<10){
+       d='0'+d
+   }
+   if(m<10){
+       m='0'+m
+   }
+   today = y+'-'+m+'-'+d;
+      document. getElementById("example-date-input").setAttribute("min", today);
+      document. getElementById("example-date-input").setAttribute("value", today);
+      document. getElementById("example-a-input").setAttribute("max", today);
+  min_birth_date = today = y-14+'-'+m+'-'+d;
+      document. getElementById("example-e-input").setAttribute("max", min_birth_date);
+
+</script>
 {% endblock %}

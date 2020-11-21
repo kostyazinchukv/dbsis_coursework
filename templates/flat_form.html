@@ -71,7 +71,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Район/місто </span>
                          </div>
-                        <input name="city" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="city" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text"
+                               required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву района або міста!
                         </div>
@@ -80,7 +81,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Населений пункт</span>
                          </div>
-                        <input name="town" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="town" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text"
+                               required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву населеного пункту!
                         </div>
@@ -97,9 +99,10 @@
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Вулиця, місто, будинок </span>
+                            <span class="input-group-text"> Вулиця, будинок, квартира </span>
                          </div>
-                        <input name="street" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
+                        <input name="street" class="form-control" pattern="[a-zA-Z][a-zA-Z0-9, ]+[a-zA-Z0-9]"
+                               type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну адресу!
                         </div>
@@ -108,10 +111,10 @@
                     </h5>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата кінця дії </span>
+                            <span class="input-group-text"> Дата початку дії </span>
                          </div>
-                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" id="example-date-input"
-                               required>
+                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" min="2000-01-01"
+                               max="2000-01-01" id="date1" required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
                         Ідентифікаційні дані власника квартири
@@ -120,7 +123,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Прізвище </span>
                          </div>
-                        <input name="second_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <input name="second_name" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text"
+                               required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне прізвище!
                         </div>
@@ -129,7 +133,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Ім'я </span>
                          </div>
-                        <input name="first_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <input name="first_name" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text"
+                               required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне ім'я!
                         </div>
@@ -138,7 +143,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> По батькові </span>
                          </div>
-                        <input name="third_name_kekw" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                        <input name="third_name_kekw" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]"
+                               type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне ім'я по батькові!
                         </div>
@@ -158,8 +164,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата народження </span>
                          </div>
-                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="example-e-input"
-                               required>
+                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="birth"
+                               min="1875-01-01" max="2000-01-01" required>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
@@ -177,15 +183,15 @@
                          </div>
                         <input name="cumpany" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
-                          Будь ласка, введіть правильне прізвище!
+                          Будь ласка, введіть правильну назву органу, що видав паспорт!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата видання </span>
                          </div>
-                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
-                               required>
+                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="get_date"
+                               min="1889-01-01" max="2000-01-01" required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
                         Ідентифікаційні дані (адреса) власника квартири
@@ -227,7 +233,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Район/місто </span>
                          </div>
-                        <input name="city_address" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="city_address" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]"
+                               type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву района або міста!
                         </div>
@@ -236,7 +243,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Населений пункт</span>
                          </div>
-                        <input name="town_address" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
+                        <input name="town_address" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]"
+                               type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву населеного пункту!
                         </div>
@@ -253,9 +261,10 @@
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Вулиця, місто, будинок </span>
+                            <span class="input-group-text"> Вулиця, будинок, квартира </span>
                          </div>
-                        <input name="street_address" class="form-control" pattern="[a-zA-Z0-9 ]+" type="text" required >
+                        <input name="street_address" class="form-control" pattern="[a-zA-Z][a-zA-Z0-9, ]+[a-zA-Z0-9]"
+                               type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну адресу!
                         </div>
@@ -299,17 +308,39 @@
                         <button type="submit" class="btn btn-primary btn-block" id='send'>
                            Оплата та відправка полісу  </button>
                     </div>
-                    <p style="margin-bottom: 3px" class="text-center">Have an account? <a href="">Log In</a> </p>
-                    <p class="text-center"><a href="" >Forgot your password?</a></p>
                 </form>
             </article>
         </div>
     </div>
-
     <script src="{{ url_for('static', filename = 'js/jquery.maskedinput.min.js') }}"></script>
     <script>
     $(function(){
       $("#phone").mask("+38(999) 999-99-99");
     });
+    </script>
+    <script>
+        document.title = "Страхування квартири";
+        n = new Date();
+        y = n. getFullYear();
+        m = n. getMonth() + 1;
+        d = n. getDate();
+        if(d<10){
+            d='0'+d
+            }
+        if(m<10){
+            m='0'+m
+        }
+        date = today = y+'-'+m+'-'+d;
+        max_contract_date = today = y+100+'-'+m+'-'+d;
+        max_birth_date = today = y-14+'-'+m+'-'+d;
+            document.getElementById("date1").setAttribute("min", date);
+            document.getElementById('date1').setAttribute("value", date);
+            document.getElementById('date1').setAttribute("max", max_contract_date);
+
+            document.getElementById('birth').setAttribute("value", max_birth_date);
+            document.getElementById('birth').setAttribute("max", max_birth_date);
+
+            document.getElementById('get_date').setAttribute("value", date);
+            document.getElementById('get_date').setAttribute("max", date);
     </script>
 {% endblock %}
