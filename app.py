@@ -188,7 +188,7 @@ def new_contract(price):
       session['contract_text'] = f"""
       Dear {second_name} {first_name} {third_name_kekw},
 
-      This e-mail is generated automatically and is sent to inform you about the terms of 
+      This e-mail is generated automatically and is sent to inform you about the terms of
       your {session['price']}-level insurance agreement. Those are the following:
       The insurance covers an {session['area']}-sq.m. household, situated at
       {city},{town},{street}
@@ -328,4 +328,3 @@ def logout():
 
 if __name__ == '__main__':
    app.run(debug=True)
-
