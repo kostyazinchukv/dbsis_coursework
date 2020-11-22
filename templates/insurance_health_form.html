@@ -25,10 +25,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Ціна </span>
                          </div>
+
                         {%if price == 'beginner'%}
                         <input name ='tar_price' class="form-control" type="text" value="34грн/день" id="price_tar_b"
                                readonly>
                         {%elif price == 'plusplus'%}
+
+
+
                         <input name ='tar_price' class="form-control" type="text" value="45грн/день" id="price_tar_m"
                                readonly>
                         {%elif price == 'pro'%}
