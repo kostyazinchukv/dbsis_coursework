@@ -87,9 +87,11 @@ def send_polis_health():
 
 @app.route('/asswecan/<price>', methods=['GET', 'POST'])
 def form_health(price):
+   """
    if g.user_id == None:
       print('Спершу увійдіть') #TODO Message Flashing
       return redirect(url_for('login'))
+   """
    if request.method == 'GET':
       return render_template('insurance_health_form.html', price=price)
    else:
@@ -145,9 +147,11 @@ def form_health(price):
 
 @app.route('/new_contract/<price>', methods=['GET', 'POST'])
 def new_contract(price):
+   """
    if g.user_id == None:
       print('Спершу увійдіть') #TODO Message Flashing
       return redirect(url_for('login'))
+   """
    if request.method == 'GET':
       return render_template('flat_form.html', price=price)
    else:
