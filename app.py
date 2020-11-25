@@ -1,17 +1,26 @@
 from flask import Flask,render_template,redirect,url_for,request, session, g
-from config import Config
+#from config import Config
 import smtplib
 import psycopg2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract
+import datetime
+
+import hashlib
+
+
+def to_sha(hash_string):
+   sha_signature = hashlib.sha256(hash_string.encode()).hexdigest()
+   return sha_signature
+
 
 app = Flask(__name__)
 
 
-app.config.from_object(Config)
-# app.secret_key = 'Heil_Adolf_Hitler'
+#app.config.from_object(Config)
+app.secret_key = 'Heil_Adolf_Hitler'
 
 
 @app.before_request
@@ -96,7 +105,10 @@ def form_health(price):
       return render_template('insurance_health_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
@@ -156,7 +168,10 @@ def new_contract(price):
       return render_template('flat_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
@@ -211,7 +226,10 @@ def contact():
 @app.route('/my_cabinet')
 def my_cabinet():
    connection = psycopg2.connect(
-      app.config['SQLALCHEMY_DATABASE_URI']
+      host="localhost",
+      database="project",
+      user="postgres",
+      password="postgresql"
       )
    connection.autocommit = True
 
@@ -229,8 +247,8 @@ def my_cabinet():
          ins_types.append(real_tup[3])
          ins_exps.append(real_tup[5])
    else:
-      ins_types = ['Незадано']
-      ins_exps = ['Незадано']
+      ins_types = ['Не укладено']
+      ins_exps = ['Не укладено']
    return render_template('profile_page.html', full_name = full_name, age = age, email=email,ins_types = ins_types, ins_exps = ins_exps)
 
 
@@ -265,12 +283,15 @@ def login():
       session.pop('nickname', None)
 
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
       login_name = request.form['login']
-      password = request.form['pass']
+      password = to_sha(request.form['pass'])
 
       exit_code = login_user(login_name, password, connection)
       connection.close()
@@ -290,16 +311,37 @@ def login():
 def register():
    if request.method == 'POST':
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
       name = request.form['name']
       login = request.form['login']
-      password1 = request.form['pass1']
-      password2 = request.form['pass2']
+      password1 = to_sha(request.form['pass1'])
+      password2 = to_sha(request.form['pass2'])
       email = request.form['email']
-      age = 21 # TODO ПОФІКСИТИ !!!!!1!1!!1!
+
+      birth = request.form['date']
+      print(birth)
+      year = int(birth[:4])
+      month = int(birth[5:7])
+      day = int(birth[8:])
+
+
+      now = datetime.datetime.now()
+      n_year = now.year
+      n_month = now.month
+      n_day = now.day
+
+      age = n_year -  year
+      if n_month < month or (n_month == month and n_day < day):
+         age -=1
+
+
+
       card = request.form['card']
       if password1 == password2:
          status = registration(login, password1, email, age, name, card,connection)
