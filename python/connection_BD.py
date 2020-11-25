@@ -1,5 +1,6 @@
 import psycopg2
 import datetime
+import hashlib
 
 def registration(login, password, email, age, name, card, connection):
     'Повертає статус у вигляді текстового рядка'
@@ -102,12 +103,17 @@ def get_child_contract_by_date(create_date):
     
     return result
 
+
+
+
 if __name__ == '__main__':
     connection = psycopg2.connect(
         host="localhost",
         database="project",
         user="postgres",
         password="postgresql")
+
+
     connection.autocommit = True
 
     print(get_contract_by_cust(15,connection))
