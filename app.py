@@ -6,12 +6,21 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract
+import datetime
+
+import hashlib
+
+
+def to_sha(hash_string):
+   sha_signature = hashlib.sha256(hash_string.encode()).hexdigest()
+   return sha_signature
+
 
 app = Flask(__name__)
 
 
 app.config.from_object(Config)
-# app.secret_key = 'Heil_Adolf_Hitler'
+#app.secret_key = 'Heil_Adolf_Hitler'
 
 
 @app.before_request
@@ -39,8 +48,7 @@ def cases():
 
 @app.route('/send_polis')
 def send_polis():
-   print(session['email_user'])
-   print(session['contract_text'])
+
    send_email(session['email_user'],text = session['contract_text'])
    session.pop('email_user',None)
    session.pop('contract_text', None)
@@ -53,11 +61,105 @@ def send_polis():
 
    return render_template('payment.html', price=price1, area=area1)
 
-@app.route('/new_contract/<price>', methods=['GET', 'POST'])
-def new_contract(price):
+@app.route('/payment')
+def payment():
+
+   end_price = session['real_price']
+
+   text = f"""
+   
+      Dear Customer,
+
+      Please, make a payment of {end_price} uah to our requisites:
+      Card number: 1488 1488 1488 1488. Holder: Cum Dick Dickovich 
+
+      With kind regards,
+      CumDickCompany   
+   
+   """
+
+   send_email(session['email_user'],text)
+
+   return render_template('payment_health.html', price=session['real_price'])
+
+@app.route('/send_polis_health')
+def send_polis_health():
+
+   send_email(session['email_user'],text = session['contract_text'])
+   #session.pop('email_user',None)
+   #session.pop('contract_text', None)
+   price1 = session['real_price']
+   #session.pop('real_price',None)
+
+   return render_template('payment_health.html', price=price1)
+
+@app.route('/asswecan/<price>', methods=['GET', 'POST'])
+def form_health(price):
+   """
    if g.user_id == None:
       print('Спершу увійдіть') #TODO Message Flashing
       return redirect(url_for('login'))
+   """
+   if request.method == 'GET':
+      return render_template('insurance_health_form.html', price=price)
+   else:
+      connection = psycopg2.connect(
+         app.config['SQLALCHEMY_DATABASE_URI']
+         )
+      connection.autocommit = True
+
+      session['price'] = request.form['tariff']
+
+      session['email_user'] = request.form['email']
+
+
+
+      if session['price'] == 'beginner':
+         real_price = 34
+      elif session['price'] == 'plusplus':
+         real_price = 45
+      elif session['price'] == 'pro':
+         real_price = 60
+      else:
+         raise Exception
+
+      session['real_price'] = real_price
+
+      second_name = request.form['second_name']
+      first_name = request.form['first_name']
+      third_name_kekw = request.form['third_name_kekw']
+
+      city = request.form['city']
+      town = request.form['town']
+      street = request.form['street']
+      session['birthday'] = request.form['birthday']
+
+
+      session['contract_text'] = f"""
+      Dear {second_name} {first_name} {third_name_kekw},
+
+      This e-mail is generated automatically and is sent to inform you about the terms of 
+      your {session['price']}-level insurance agreement. Those are the following:
+      The insurance covers health and life of our customer {second_name} {first_name} {third_name_kekw} born on {session['birthday']}, 
+      who lives in {city},{town},{street};
+      Insurance`s price will be {real_price} uah a day;
+
+      With kind regards,
+      CumDickCompany
+      """
+      create_contract(g.user_id, 'Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      connection.close()
+
+      return render_template('payment_health.html', price=real_price)
+
+
+@app.route('/new_contract/<price>', methods=['GET', 'POST'])
+def new_contract(price):
+   """
+   if g.user_id == None:
+      print('Спершу увійдіть') #TODO Message Flashing
+      return redirect(url_for('login'))
+   """
    if request.method == 'GET':
       return render_template('flat_form.html', price=price)
    else:
@@ -81,6 +183,8 @@ def new_contract(price):
       else:
          raise Exception
 
+      session['real_price'] = real_price
+
       second_name = request.form['second_name']
       first_name = request.form['first_name']
       third_name_kekw = request.form['third_name_kekw']
@@ -101,7 +205,7 @@ def new_contract(price):
       With kind regards,
       CumDickCompany
       """
-      create_contract(g.user_id, price, real_price, '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      create_contract(g.user_id, 'Household '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
       connection.close()
 
       return render_template('payment.html', price=session['price'], area=session['area'])
@@ -133,8 +237,8 @@ def my_cabinet():
          ins_types.append(real_tup[3])
          ins_exps.append(real_tup[5])
    else:
-      ins_types = ['Незадано']
-      ins_exps = ['Незадано']
+      ins_types = ['Не укладено']
+      ins_exps = ['Не укладено']
    return render_template('profile_page.html', full_name = full_name, age = age, email=email,ins_types = ins_types, ins_exps = ins_exps)
 
 
@@ -155,9 +259,7 @@ def send_email(email, text = 'Tut bude infa pro polis (sorry, ne vstyg zapility)
    return render_template('mainpage.html')
 
 
-@app.route('/asswecan/<price>')
-def form_health(price):
-    return render_template('insurance_health_form.html', price=price)
+
 
 
 
@@ -176,7 +278,7 @@ def login():
       connection.autocommit = True
 
       login_name = request.form['login']
-      password = request.form['pass']
+      password = to_sha(request.form['pass'])
 
       exit_code = login_user(login_name, password, connection)
       connection.close()
@@ -202,10 +304,28 @@ def register():
 
       name = request.form['name']
       login = request.form['login']
-      password1 = request.form['pass1']
-      password2 = request.form['pass2']
+      password1 = to_sha(request.form['pass1'])
+      password2 = to_sha(request.form['pass2'])
       email = request.form['email']
-      age = 21 # TODO ПОФІКСИТИ !!!!!1!1!!1!
+
+      birth = request.form['date']
+      print(birth)
+      year = int(birth[:4])
+      month = int(birth[5:7])
+      day = int(birth[8:])
+
+
+      now = datetime.datetime.now()
+      n_year = now.year
+      n_month = now.month
+      n_day = now.day
+
+      age = n_year -  year
+      if n_month < month or (n_month == month and n_day < day):
+         age -=1
+
+
+
       card = request.form['card']
       if password1 == password2:
          status = registration(login, password1, email, age, name, card,connection)
