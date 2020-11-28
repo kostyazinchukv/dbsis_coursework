@@ -153,6 +153,20 @@ def form_health(price):
       return render_template('payment_health.html', price=real_price)
 
 
+@app.route('/for_the_alliance/<price>', methods=['GET', 'POST'])
+def car_form(price):
+   cars = ["Audi", "Mazda", "Volkswagen", "BMW", "Mercedes", "Chevrolet", "Renault", "Peugeot", "Fiat","Ford", "Honda",
+           "Hyundai", "Toyota", "Nissan", "Daewoo", "Mitsubishi", "Porsche", "Ferrari",
+           "Lamborghini", "Bugatti", "Dodge", "Chrysler", "Rolls-Royce", "Cadillac", "Cherry", "Citroen",
+           "Dacia", "Geely", "Hummer", "Infiniti", "Jaguar", "Jeep", "Kia", "Lexus", "Mercedes-Benz",
+           "Land Rover", "Range Rover", "Lotus", "Lincoln", "Maserati", "Maybach", "Opel", "Seat", "Subaru",
+           "Skoda", "Tesla", "Volvo", "VAZ", "ZAZ", "UAZ", "Moskvich"
+           ]
+   cars.sort()
+   if request.method == 'GET':
+      return render_template('car_insurance_form.html', price=price, cars=cars)
+
+
 @app.route('/new_contract/<price>', methods=['GET', 'POST'])
 def new_contract(price):
    """
