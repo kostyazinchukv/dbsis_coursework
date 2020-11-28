@@ -211,6 +211,12 @@ def new_contract(price):
       return render_template('payment.html', price=session['price'], area=session['area'])
 
 
+
+@app.route('/property_insurance/<price>', methods=['GET', 'POST'])
+def property_insurance(price):
+      return render_template('payment.html', price=session['price'])
+
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
