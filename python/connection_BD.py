@@ -12,7 +12,7 @@ def registration(login, password, email, age, name, card, connection):
     
     return status
 
-def login_user(login_or_email, password,connection):
+def login_user(login_or_email, password, connection):
     'Повертає id користувача'
     cursor = connection.cursor()
     
@@ -23,7 +23,7 @@ def login_user(login_or_email, password,connection):
     return c_id
 
 
-def create_child_contract(child_name, fk_customer_id, contract_type, contract_price, contract_end_date):
+def create_child_contract(child_name, fk_customer_id, contract_type, contract_price, contract_end_date, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
     
@@ -56,6 +56,16 @@ def get_customer_info(customer_id, connection):
     
     return result
 
+def update_customer(c_id,customer_login_v,customer_email_v,customer_name_v,bank_card_v, connection):
+    'Повертає статус у вигляді текстового рядка'
+    cursor = connection.cursor()
+
+    cursor.callproc('update_customer', (c_id,customer_login_v,customer_email_v,customer_name_v,bank_card_v))
+
+    status = cursor.fetchone()[0]
+
+    return status
+
 
 def get_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
@@ -69,7 +79,7 @@ def get_contract_by_cust(customer_id, connection):
 
 
 # Я хз як ввести дату, кста, в цьому пакеті ))0)00
-def get_contract_by_date(create_date):
+def get_contract_by_date(create_date, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
     
@@ -81,7 +91,7 @@ def get_contract_by_date(create_date):
 
 
 
-def get_child_contract_by_cust(customer_id):
+def get_child_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (child_id, customer_id, Імя дитини, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
     

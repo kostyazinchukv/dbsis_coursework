@@ -1,5 +1,5 @@
 from flask import Flask,render_template,redirect,url_for,request, session, g
-from config import Config
+#from config import Config
 import smtplib
 import psycopg2
 from email.mime.text import MIMEText
@@ -19,8 +19,8 @@ def to_sha(hash_string):
 app = Flask(__name__)
 
 
-app.config.from_object(Config)
-#app.secret_key = 'Heil_Adolf_Hitler'
+#app.config.from_object(Config)
+app.secret_key = 'Heil_Adolf_Hitler'
 
 
 @app.before_request
@@ -50,14 +50,14 @@ def cases():
 def send_polis():
 
    send_email(session['email_user'],text = session['contract_text'])
-   session.pop('email_user',None)
-   session.pop('contract_text', None)
+   #session.pop('email_user',None)
+   #session.pop('contract_text', None)
 
    price1 = session['price']
    area1 = session['area']
 
-   session.pop('price',None)
-   session.pop('area', None)
+   #session.pop('price',None)
+   #session.pop('area', None)
 
    return render_template('payment.html', price=price1, area=area1)
 
@@ -104,7 +104,10 @@ def form_health(price):
       return render_template('insurance_health_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
@@ -164,7 +167,10 @@ def new_contract(price):
       return render_template('flat_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
@@ -219,7 +225,10 @@ def contact():
 @app.route('/my_cabinet')
 def my_cabinet():
    connection = psycopg2.connect(
-      app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
       )
    connection.autocommit = True
 
@@ -273,7 +282,10 @@ def login():
       session.pop('nickname', None)
 
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
@@ -298,7 +310,10 @@ def login():
 def register():
    if request.method == 'POST':
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+         host="localhost",
+         database="project",
+         user="postgres",
+         password="postgresql"
          )
       connection.autocommit = True
 
