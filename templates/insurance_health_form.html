@@ -40,7 +40,7 @@
                                readonly>
                         {% endif %}
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії договору
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії та кінець договору
                     </h5>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
@@ -49,6 +49,27 @@
                         <input name ='begin_date' class="form-control" type="date" min = "00-00-0000" value="2000-01-01" id="example-date-input"
                                required>
                     </div>
+                     <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата кінця дії </span>
+                         </div>
+                        <input name ='end_date' class="form-control" type="date" value="2000-01-01" id="example-end-date-input"
+                               required>
+                    </div>
+
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
+                        Страхування дитини
+                    </h5>
+
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Оберіть цю опцію, якщо бажаєте застрахувати совю дитину </span>
+                         </div>
+                        <input name ='child' class="form-control" type="checkbox" value="Yes" id="example-child-box">
+                    </div>
+
+
+
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
                         Ідентифікаційні дані клієнта
                     </h5>
@@ -251,23 +272,30 @@
     });
     </script>
     <script>
-      document.title = "Страхування життя";
+      document.title = "Страхування авто";
       n = new Date();
       y = n. getFullYear();
       m = n. getMonth() + 1;
       d = n. getDate();
+      tommorow = d+1;
       if(d<10){
-       d='0'+d
+       d='0'+d;
+          tommorow = '0' + tommorow;
    }
    if(m<10){
-       m='0'+m
+       m='0'+m;
    }
    today = y+'-'+m+'-'+d;
-      document. getElementById("example-date-input").setAttribute("min", today);
-      document. getElementById("example-date-input").setAttribute("value", today);
-      document. getElementById("example-a-input").setAttribute("max", today);
-  min_birth_date = today = y-14+'-'+m+'-'+d;
-      document. getElementById("example-e-input").setAttribute("max", min_birth_date);
+   tommorow_date= y+'-'+m+'-'+tommorow;
+   min_birth_date  = y-18+'-'+m+'-'+d;
+    document. getElementById("example-date-input").setAttribute("min", today);
+    document. getElementById("example-date-input").setAttribute("value", today);
+    document. getElementById("example-end-date-input").setAttribute("min", tommorow_date);
+    document. getElementById("example-end-date-input").setAttribute("value", tommorow_date);
+    document. getElementById("example-a-input").setAttribute("max", today);
+    document. getElementById("example-a-input").setAttribute("value", today);
 
+    document. getElementById("example-e-input").setAttribute("max", min_birth_date);
+    document. getElementById("example-e-input").setAttribute("value", min_birth_date);
 </script>
 {% endblock %}
