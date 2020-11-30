@@ -1,5 +1,5 @@
 from flask import Flask,render_template,redirect,url_for,request, session, g
-from config import Config
+#from config import Config
 import smtplib
 import psycopg2
 from email.mime.text import MIMEText
@@ -19,7 +19,7 @@ def to_sha(hash_string):
 app = Flask(__name__)
 
 
-app.config.from_object(Config)
+#app.config.from_object(Config)
 #app.secret_key = 'Heil_Adolf_Hitler'
 
 

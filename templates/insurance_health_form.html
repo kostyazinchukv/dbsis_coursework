@@ -67,6 +67,42 @@
                          </div>
                         <input name ='child' class="form-control" type="checkbox" value="Yes" id="example-child-box">
                     </div>
+                    <div class = "child hidden">
+                        <div class="form-group input-group input-group-lg">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> Прізвище дитини </span>
+                             </div>
+                            <input name="second_name" id="child-surname" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text" required >
+                            <div class="invalid-feedback">
+                              Будь ласка, введіть правильне прізвище!
+                            </div>
+                        </div>
+                        <div class="form-group input-group input-group-lg">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> Ім'я дитини </span>
+                             </div>
+                            <input name="first_name" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                            <div class="invalid-feedback">
+                              Будь ласка, введіть правильне ім'я!
+                            </div>
+                        </div>
+                        <div class="form-group input-group input-group-lg">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> По батькові дитини </span>
+                             </div>
+                            <input name="third_name_kekw" class="form-control" pattern="[a-zA-Z]+" type="text" required >
+                            <div class="invalid-feedback">
+                              Будь ласка, введіть правильне ім'я по батькові!
+                            </div>
+                        </div>
+                        <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата народження дитини</span>
+                         </div>
+                        <input name ='birthday' class="form-control" type="date" max = "" value="2000-01-01" id="example-child-e-input"
+                               required>
+                    </div>
+                    </div>
 
 
 
@@ -264,7 +300,18 @@
             </article>
         </div>
     </div>
-    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
+    <script>
+        const checkbox = document.getElementById('example-child-box');
+        const childForm = document.getElementsByClassName('child')[0];
+        checkbox.addEventListener('click', () =>{
+            if (checkbox.checked) {
+                childForm.classList.remove('hidden');
+                return;
+            }
+            childForm.classList.add('hidden');
+        });
+    </script>
+    <script src="{{ url_for('static', filename = 'js/child.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery.maskedinput.min.js') }}"></script>
     <script>
     $(function(){
@@ -277,25 +324,28 @@
       y = n. getFullYear();
       m = n. getMonth() + 1;
       d = n. getDate();
-      tommorow = d+1;
+      tomorrow = d+1;
       if(d<10){
        d='0'+d;
-          tommorow = '0' + tommorow;
+          tomorrow = '0' + tomorrow;
    }
    if(m<10){
        m='0'+m;
    }
    today = y+'-'+m+'-'+d;
-   tommorow_date= y+'-'+m+'-'+tommorow;
+   tomorrow_date= y+'-'+m+'-'+tomorrow;
    min_birth_date  = y-18+'-'+m+'-'+d;
     document. getElementById("example-date-input").setAttribute("min", today);
     document. getElementById("example-date-input").setAttribute("value", today);
-    document. getElementById("example-end-date-input").setAttribute("min", tommorow_date);
-    document. getElementById("example-end-date-input").setAttribute("value", tommorow_date);
+    document. getElementById("example-end-date-input").setAttribute("min", tomorrow_date);
+    document. getElementById("example-end-date-input").setAttribute("value", tomorrow_date);
     document. getElementById("example-a-input").setAttribute("max", today);
     document. getElementById("example-a-input").setAttribute("value", today);
 
     document. getElementById("example-e-input").setAttribute("max", min_birth_date);
     document. getElementById("example-e-input").setAttribute("value", min_birth_date);
+
+    document. getElementById("example-child-e-input").setAttribute("max", today);
+    document. getElementById("example-child-e-input").setAttribute("value", today);
 </script>
 {% endblock %}
