@@ -46,7 +46,7 @@ def create_contract(fk_customer_id, contract_type, contract_price, contract_end_
 
 
 def get_customer_info(customer_id, connection):
-    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку)'
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
     cursor = connection.cursor()
 
     cursor.execute(f"SELECT get_customer_info({customer_id})")
@@ -56,11 +56,11 @@ def get_customer_info(customer_id, connection):
     
     return result
 
-def update_customer(c_id,customer_login_v,customer_email_v,customer_name_v,bank_card_v, connection):
+def update_customer(c_id,customer_login_v,customer_email_v, customer_age_v,customer_name_v,bank_card_v, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
 
-    cursor.callproc('update_customer', (c_id,customer_login_v,customer_email_v,customer_name_v,bank_card_v))
+    cursor.callproc('update_customer', (c_id,customer_login_v,customer_email_v,customer_age_v,customer_name_v,bank_card_v))
 
     status = cursor.fetchone()[0]
 
@@ -71,9 +71,9 @@ def get_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
 
-    cursor.execute(f"SELECT get_contract_by_cust({customer_id})")
+    cursor.execute(f"select * from contracts where contracts.fk_customer_id = {customer_id}")
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -85,7 +85,7 @@ def get_contract_by_date(create_date, connection):
     
     cursor.callproc('get_contract_by_date', (create_date))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -97,7 +97,7 @@ def get_child_contract_by_cust(customer_id, connection):
     
     cursor.callproc('get_child_contract_by_cust', (customer_id))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -109,7 +109,7 @@ def get_child_contract_by_date(create_date):
     
     cursor.callproc('get_child_contract_by_date', (create_date))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
     connection.autocommit = True
 
-    print(get_contract_by_cust(15,connection))
+    print(get_contract_by_cust(19,connection))
     #print(create_contract(2, 'SS', 14.88, '2020-10-22'))
 
     #print(get_contract_by_date(datetime.date(2020, 10, 22)))

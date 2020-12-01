@@ -5,7 +5,7 @@ import psycopg2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
-from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract
+from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract,update_customer
 import datetime
 
 import hashlib
@@ -86,10 +86,7 @@ def payment():
 def send_polis_health():
 
    send_email(session['email_user'],text = session['contract_text'])
-   #session.pop('email_user',None)
-   #session.pop('contract_text', None)
    price1 = session['real_price']
-   #session.pop('real_price',None)
 
    return render_template('payment_health.html', price=price1)
 
@@ -234,13 +231,140 @@ def new_contract(price):
 
 @app.route('/property_insurance/<price>', methods=['GET', 'POST'])
 def property_insurance(price):
+
       return render_template('payment.html', price=session['price'])
 
-
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+   if request.method == 'GET':
+      return render_template('contact.html')
+   else:
 
+      text2 = "Question by: "+request.form['name']+ '\n'+request.form['text']+'\nR.S.V.P to ' +request.form['email']
+      send_email('8889344@ukr.net', text=text2)
+      #TODO Message OK
+      return render_template('contact.html')
+
+@app.route('/update_me', methods=['GET', 'POST'])
+def update_me():
+   connection = psycopg2.connect(
+      host="localhost",
+      database="project",
+      user="postgres",
+      password="postgresql"
+   )
+   connection.autocommit = True
+   if request.method == 'GET':
+      (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(g.user_id, connection)[0][1:-1].split(',')
+      g.email = email
+      g.fname = full_name
+
+      contracts = get_contract_by_cust(customer_id, connection)
+      connection.close()
+
+      g.ins_house = []
+      g.ins_life = []
+      g.ins_valuables = []
+      g.ins_auto = []
+
+      if contracts[0] != None:
+         for real_tup in contracts:
+            if 'Household' in real_tup[3]:
+               g.ins_house.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Life' in real_tup[3]:
+               g.ins_life.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Valuables' in real_tup[3]:
+               g.ins_valuables.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Auto' in real_tup[3]:
+               g.ins_auto.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+
+      else:
+         g.ins_house = ['Не укладено жодного']
+         g.ins_life = ['Не укладено жодного']
+         g.ins_valuables = ['Не укладено жодного']
+         g.ins_auto = ['Не укладено жодного']
+
+      if g.ins_house == []:
+         g.ins_house = ['Не укладено жодного']
+      if g.ins_life == []:
+         g.ins_life = ['Не укладено жодного']
+      if g.ins_valuables == []:
+         g.ins_valuables = ['Не укладено жодного']
+      if g.ins_auto == []:
+         g.ins_auto = ['Не укладено жодного']
+
+
+      return render_template('edit_profile_page.html')
+   else:
+      (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(g.user_id, connection)[0][
+                                                                       1:-1].split(',')
+      contracts = get_contract_by_cust(customer_id, connection)
+
+      g.ins_house = []
+      g.ins_life = []
+      g.ins_valuables = []
+      g.ins_auto = []
+
+      if contracts[0] != None:
+         for real_tup in contracts:
+            if 'Household' in real_tup[3]:
+               g.ins_house.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Life' in real_tup[3]:
+               g.ins_life.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Valuables' in real_tup[3]:
+               g.ins_valuables.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+            elif 'Auto' in real_tup[3]:
+               g.ins_auto.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+
+      else:
+         g.ins_house = ['Не укладено жодного']
+         g.ins_life = ['Не укладено жодного']
+         g.ins_valuables = ['Не укладено жодного']
+         g.ins_auto = ['Не укладено жодного']
+
+      if g.ins_house == []:
+         g.ins_house = ['Не укладено жодного']
+      if g.ins_life == []:
+         g.ins_life = ['Не укладено жодного']
+      if g.ins_valuables == []:
+         g.ins_valuables = ['Не укладено жодного']
+      if g.ins_auto == []:
+         g.ins_auto = ['Не укладено жодного']
+
+
+      u_id = session['user_id']
+      log_u = session['nickname']
+      email_u = request.form['email']
+      f_name = request.form['fname']
+
+      birth = request.form['birthdate']
+      print(birth)
+      year = int(birth[:4])
+      month = int(birth[5:7])
+      day = int(birth[8:])
+
+      print(birth)
+
+      now = datetime.datetime.now()
+      n_year = now.year
+      n_month = now.month
+      n_day = now.day
+
+      age_u = int(n_year -  year)
+
+
+      if n_month < month or (n_month == month and n_day < day):
+         age_u -=1
+
+      (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(u_id, connection)[0][
+                                                                       1:-1].split(',')
+
+      status = update_customer(u_id, log_u, email_u, age_u, f_name, bank, connection)
+
+      print(status) #TODO Message flashing
+
+      connection.close()
+      return render_template('profile_page.html', full_name = f_name, age = age, email=email_u)
 
 @app.route('/my_cabinet')
 def my_cabinet():
@@ -252,23 +376,45 @@ def my_cabinet():
       )
    connection.autocommit = True
 
-   (customer_id, full_name, age, email, passw, login, bank) = get_customer_info(g.user_id,connection)[0][1:-1].split(',')
+   (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(g.user_id,connection)[0][1:-1].split(',')
 
    contracts = get_contract_by_cust(customer_id, connection)
    connection.close()
 
-   ins_types = []
-   ins_exps = []
+
+
+   g.ins_house = []
+   g.ins_life = []
+   g.ins_valuables = []
+   g.ins_auto = []
+
    if contracts[0] != None:
-      for tup in contracts:
-         real_tup =tup[1:-1].split(',')
-         print(real_tup)
-         ins_types.append(real_tup[3])
-         ins_exps.append(real_tup[5])
+      for real_tup in contracts:
+         if 'Household' in real_tup[3]:
+            g.ins_house.append(str(real_tup[3])+' until '+str(real_tup[5]))
+         elif 'Life' in real_tup[3]:
+            g.ins_life.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+         elif 'Valuables' in real_tup[3]:
+            g.ins_valuables.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+         elif 'Auto' in real_tup[3]:
+            g.ins_auto.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
+
    else:
-      ins_types = ['Не укладено']
-      ins_exps = ['Не укладено']
-   return render_template('profile_page.html', full_name = full_name, age = age, email=email,ins_types = ins_types, ins_exps = ins_exps)
+      g.ins_house = ['Не укладено жодного']
+      g.ins_life = ['Не укладено жодного']
+      g.ins_valuables = ['Не укладено жодного']
+      g.ins_auto = ['Не укладено жодного']
+
+   if g.ins_house == []:
+      g.ins_house = ['Не укладено жодного']
+   if g.ins_life == []:
+      g.ins_life = ['Не укладено жодного']
+   if g.ins_valuables == []:
+      g.ins_valuables = ['Не укладено жодного']
+   if g.ins_auto == []:
+      g.ins_auto = ['Не укладено жодного']
+
+   return render_template('profile_page.html', full_name = full_name, age = age, email=email)
 
 
 def send_email(email, text = 'Tut bude infa pro polis (sorry, ne vstyg zapility)'):
