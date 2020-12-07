@@ -12,7 +12,7 @@ def registration(login, password, email, age, name, card, connection):
     
     return status
 
-def login_user(login_or_email, password,connection):
+def login_user(login_or_email, password, connection):
     'Повертає id користувача'
     cursor = connection.cursor()
     
@@ -23,7 +23,7 @@ def login_user(login_or_email, password,connection):
     return c_id
 
 
-def create_child_contract(child_name, fk_customer_id, contract_type, contract_price, contract_end_date):
+def create_child_contract(child_name, fk_customer_id, contract_type, contract_price, contract_end_date, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
     
@@ -46,7 +46,7 @@ def create_contract(fk_customer_id, contract_type, contract_price, contract_end_
 
 
 def get_customer_info(customer_id, connection):
-    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку)'
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
     cursor = connection.cursor()
 
     cursor.execute(f"SELECT get_customer_info({customer_id})")
@@ -57,37 +57,136 @@ def get_customer_info(customer_id, connection):
     return result
 
 
+def update_customer_role(customer_login, new_role, connection):
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"""
+
+                    UPDATE CUSTOMERS SET customer_role = '{new_role}'
+                    WHERE customer_login = '{customer_login}'
+
+                    """)
+
+    return 'Updated successfully'
+
+def get_customer_by_login(customer_log, connection):
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+    SELECT CUSTOMERS.CUSTOMER_NAME, CUSTOMERS.BANK_CARD,
+                    CONTRACTS.CONTRACT_TYPE, CONTRACTS.CONTRACT_DATE, CONTRACTS.CONTRACT_END_DATE, CUSTOMERS.CUSTOMER_ROLE,
+                        CONTRACTS.CONTRACT_IS_PAID
+	FROM CUSTOMERS JOIN CONTRACTS ON customers.customer_id = contracts.fk_customer_id
+	WHERE customers.customer_login = '{customer_log}';""")
+
+
+    result = cursor.fetchall()
+
+    return result
+
+def get_customer_i_by_login(customer_log, connection):
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+    SELECT CUSTOMERS.CUSTOMER_NAME, CUSTOMERS.BANK_CARD, CUSTOMERS.CUSTOMER_ROLE
+	FROM CUSTOMERS
+	WHERE customers.customer_login = '{customer_log}';""")
+
+
+    result = cursor.fetchall()[0]
+
+    return result
+
+
+def update_customer(c_id,customer_login_v,customer_email_v, customer_age_v,customer_name_v,bank_card_v, connection):
+    'Повертає статус у вигляді текстового рядка'
+    cursor = connection.cursor()
+
+    cursor.callproc('update_customer', (c_id,customer_login_v,customer_email_v,customer_age_v,customer_name_v,bank_card_v))
+
+    status = cursor.fetchone()[0]
+
+    return status
+
+
+def update_payment_status(contract_id):
+    'Повертає статус у вигляді текстового рядка'
+    connection = psycopg2.connect(
+        host="localhost",
+        database="project",
+        user="postgres",
+        password="postgresql")
+
+
+    connection.autocommit = True
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+            UPDATE CONTRACTS
+            SET contract_is_paid = true
+            WHERE contract_id = {contract_id}""")
+
+    connection.close()
+
+    return 'Payment successful'
+
+
+def update_child_payment_status(contract_id):
+    'Повертає статус у вигляді текстового рядка'
+    connection = psycopg2.connect(
+        host="localhost",
+        database="project",
+        user="postgres",
+        password="postgresql")
+
+
+    connection.autocommit = True
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+        UPDATE children_contracts
+        SET contract_is_paid = true
+        WHERE child_id = {contract_id}""")
+
+    connection.close()
+
+    return 'Payment successful'
+
+
 def get_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
 
-    cursor.execute(f"SELECT get_contract_by_cust({customer_id})")
+    cursor.execute(f"select * from contracts where contracts.fk_customer_id = {customer_id}")
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
 
 # Я хз як ввести дату, кста, в цьому пакеті ))0)00
-def get_contract_by_date(create_date):
+def get_contract_by_date(create_date, connection):
     'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
     
     cursor.callproc('get_contract_by_date', (create_date))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
 
 
-def get_child_contract_by_cust(customer_id):
+def get_child_contract_by_cust(customer_id, connection):
     'Повертає кортеж з (child_id, customer_id, Імя дитини, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
     cursor = connection.cursor()
     
     cursor.callproc('get_child_contract_by_cust', (customer_id))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -99,7 +198,7 @@ def get_child_contract_by_date(create_date):
     
     cursor.callproc('get_child_contract_by_date', (create_date))
     
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     
     return result
 
@@ -116,7 +215,11 @@ if __name__ == '__main__':
 
     connection.autocommit = True
 
-    print(get_contract_by_cust(15,connection))
+    #print(get_customer_by_login("Vlados Herasymenko",connection))
+
+    #print(update_role('fullmaster1', "Full Master", connection))
+
+    #print(get_contract_by_cust(19,connection))
     #print(create_contract(2, 'SS', 14.88, '2020-10-22'))
 
     #print(get_contract_by_date(datetime.date(2020, 10, 22)))

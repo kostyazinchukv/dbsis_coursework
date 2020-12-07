@@ -4,7 +4,7 @@
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
                 <h3 class="card-title mt-3 text-center">Страхування авто</h3>
-                <form action="{{url_for('form_health', price = 'beginner')}}" method="post" class="needs-validation" novalidate>
+                <form action="{{url_for('car_form', price = '{{price}}')}}" method="post" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -36,21 +36,14 @@
                                readonly>
                         {% endif %}
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії та кінець договору
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Кінець дії договору
                     </h5>
-                    <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата початку дії </span>
-                         </div>
-                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" id="example-date-input"
-                               required>
-                    </div>
 
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата кінця дії </span>
                          </div>
-                        <input name ='end_date' class="form-control" type="date" value="2000-01-01" id="example-end-date-input"
+                        <input name ='end_date' class="form-control" type="date" value="2021-01-01" id="example-end-date-input"
                                required>
                     </div>
 
@@ -82,7 +75,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Реєстраційний номер авто</span>
                          </div>
-                        <input name="town" class="form-control" pattern="[А-Я][А-Я][0-9][0-9][0-9][0-9][А-Я][А-Я]" type="text" placeholder="СС1488АГ" required >
+                        <input name="reg_num" class="form-control" pattern="[А-Я][А-Я][0-9][0-9][0-9][0-9][А-Я][А-Я]" type="text" placeholder="СС1488АГ" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильний реєстраційний номер авто!
                         </div>
@@ -92,14 +85,14 @@
                             <span class="input-group-text"> Номер кузова авто </span>
                          </div>
                         <input name="index" class="form-control" pattern="[a-zA-Z0-9]"
-                               type="text" minlength="9" maxlength="17" placeholder="asd123qwe456" required>
+                               type="text" placeholder="asd123qwe456" required>
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильний номер кузова(9-17 букв/цифр без пробілів)!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Марка автомобіля </span>
+                            <span class="input-group-text"> Рік випуску </span>
                          </div>
                         <select name="year_of_issue" class="custom-select form-control" id="inputYearOfIssue">
                             <option selected>Виберіть рік випуску</option>

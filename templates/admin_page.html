@@ -18,49 +18,79 @@
     <div class="container">
         <div class="main-body">
             <!-- Search form -->
-            <form class="form-inline d-flex md-form form-lg mt-0">
-              <i class="fa fa-search" aria-hidden="true"></i><input class="form-control w-50" type="text" placeholder="Input user name" aria-label="Search">
+            <form action = "{{url_for('admin_page')}}" method="post" class="form-inline d-flex md-form form-lg mt-0">
+              <i class="fa fa-search" aria-hidden="true"></i>
+                <input class="form-control w-50" name = "log" type="text" placeholder="Input user login" aria-label="Search">
+                <input type="submit" class="btn btn-info" value = "Information about customer's insurances">
             </form>
             <br>
 
-            <button type="button" class="btn btn-info">Information about all insurances</button> <button type="button" class="btn btn-info">Information about current insurances</button>
 
-                <!--<table class="table">
+            <!-- <button type="button" class="btn btn-info">Information about current insurances</button> -->
+
+                {% if  g.admin_name != None %}
+
+                    <br><hr>
+                        Full name:{{g.admin_name}}
+                    <br><hr>
+                        Card Number:{{g.admin_card}}
+                    <br><hr>
+                        Role: {{g.admin_role_user}}
+
+                    {% if g.c_role == '"Full Master"' %}
+                    <form action="{{url_for('update_role')}}" method="post">
+                        <div>
+                          <input type="radio" id="leatherman" name="radio" value="leatherman"
+                                 {% if g.admin_role == 'leatherman' %}checked {% endif %}>
+                          <label for="leatherman">Користувач</label>
+                        </div>
+
+                        <div>
+                          <input type="radio" id="Fucking Slave" name="radio" value="Fucking Slave" {% if g.admin_role == 'Fucking Slave' %}checked {% endif %}>
+                          <label for="Fucking Slave">Менеджер</label>
+                        </div>
+
+                        <div>
+                          <input type="radio" id="Full Master" name="radio" value="Full Master" {% if g.admin_role == 'Full Master' %}checked {% endif %}>
+                          <label for="Full Master">Адміністратор</label>
+                        </div>
+
+
+                        <input type="submit" class="btn btn-success" value = 'OK'></input>
+                        {% endif %}
+                    </form>
+
+                    <br><hr>
+
+                {% endif %}
+
+            {% if g.customer_list != [] %}
+                <table class="table">
+
                   <thead class="thead-dark">
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">All insurances</th>
-                      <th scope="col">Current insurances</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Тип</th>
+                        <th scope="col">Дата початку</th>
+                        <th scope="col">Дата кінця</th>
+                        <th scope="col">Статус</th>
                     </tr>
                   </thead>
                   <tbody>
+                  {% for name, card, type, start_date, end_date, role, status in g.customer_list %}
                     <tr>
-                      <th scope="row">1</th>
-                      <td>Insurance name</td>
-                      <td>Insurance name</td>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{type}}</td>
+                        <td>{{start_date}}</td>
+                        <td>{{end_date}}</td>
+                        <td>{% if status == 1 %} Оплачено {% endif %} {% if status == 0 %} Неоплачено {% endif %}</td>
                     </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Insurance name</td>
-                      <td>Insurance name</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Insurance name</td>
-                      <td>Insurance name</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">4</th>
-                      <td>Insurance name</td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <th scope="row">5</th>
-                      <td>Insurance name</td>
-                      <td></td>
-                    </tr>
+                  {% endfor %}
                   </tbody>
-            </table>-->
+
+            </table>
+        {% endif %}
+
 
         </div>
     </div>
