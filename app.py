@@ -1,13 +1,14 @@
 from flask import Flask,render_template,redirect,url_for,request, session, g
-#from config import Config
+from config import Config
 import smtplib
 import psycopg2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
-from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract,update_customer
+from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract,\
+   update_customer,get_customer_by_login,get_customer_i_by_login,update_customer_role,update_payment_status,\
+    update_child_payment_status,create_child_contract
 import datetime
-
 import hashlib
 
 
@@ -19,7 +20,7 @@ def to_sha(hash_string):
 app = Flask(__name__)
 
 
-#app.config.from_object(Config)
+app.config.from_object(Config)
 #app.secret_key = 'Heil_Adolf_Hitler'
 
 
@@ -27,21 +28,79 @@ app = Flask(__name__)
 def before_request():
    g.user_id = None
    g.nickname = None
-   if ('user_id' in session) and ('nickname' in session):
+   g.c_role = None
+   g.customer_list = []
+   g.admin_name = None
+   g.admin_card = None
+   g.admin_role = None
+
+
+   if ('user_id' in session) and ('nickname' in session) and ('role' in session):
       g.user_id = session['user_id']
       g.nickname = session['nickname']
+      g.c_role = session['role']
+
+
 
 @app.route('/')
 def red():
    return redirect(url_for('mainpage'))
 
+@app.route('/update_role', methods=['POST'])
+def update_role():
+
+   connection = psycopg2.connect(
+       app.config['SQLALCHEMY_DATABASE_URI']
+   )
+   connection.autocommit = True
+
+   update_customer_role(session['log'],request.form['radio'],connection)
+
+   # TODO Message
+
+   connection.close()
+
+   return redirect(url_for('admin_page'))
+
+
+@app.route('/admin_page', methods=['GET', 'POST'])
+def admin_page():
+   if g.c_role == '"Full Master"' or g.c_role =='"Fucking Slave"':
+      if request.method == 'POST':
+
+         connection = psycopg2.connect(
+             app.config['SQLALCHEMY_DATABASE_URI']
+         )
+         connection.autocommit = True
+
+         log = request.form['log']
+         session['log'] = log
+
+         g.customer_list = get_customer_by_login(log, connection)
+
+         (g.admin_name, g.admin_card, g.admin_role) = get_customer_i_by_login(session['log'],connection)
+
+         print(g.admin_role)
+         if g.admin_role == 'Fucking Slave':
+            g.admin_role_user = 'Менеджер'
+         elif g.admin_role == 'Full Master':
+            g.admin_role_user = 'Адміністратор'
+         elif g.admin_role == 'leatherman':
+            g.admin_role_user = 'Користувач'
+
+         print(g.admin_role_user)
+
+      return render_template('admin_page.html')
+   else:
+      #TODO Message Flashing
+      return redirect(url_for('mainpage'))
 
 @app.route('/mainpage', methods=['GET', 'POST'])
 def mainpage():
     return render_template('mainpage.html')
 
 
-@app.route('/cases')
+@app.route('/cases',methods=['GET'])
 def cases():
     return render_template('insurance_case.html')
 
@@ -50,47 +109,35 @@ def cases():
 def send_polis():
 
    send_email(session['email_user'],text = session['contract_text'])
-   #session.pop('email_user',None)
-   #session.pop('contract_text', None)
 
-   price1 = session['price']
-   area1 = session['area']
+   return render_template('payment.html', real_price=session['real_price'])
 
-   #session.pop('price',None)
-   #session.pop('area', None)
-
-   return render_template('payment.html', price=price1, area=area1)
-
-@app.route('/payment')
+@app.route('/payment') # PUT
 def payment():
-
-   end_price = session['real_price']
 
    text = f"""
    
       Dear Customer,
 
-      Please, make a payment of {end_price} uah to our requisites:
+      Please, make a payment of {session['real_price']} uah to our requisites:
       Card number: 1488 1488 1488 1488. Holder: Cum Dick Dickovich 
 
       With kind regards,
       CumDickCompany   
    
    """
-
    send_email(session['email_user'],text)
 
-   return render_template('payment_health.html', price=session['real_price'])
+   if 'is_child' in session:
+      update_child_payment_status(session['contract_id'])
+   else:
+      update_payment_status(session['contract_id'])
 
-@app.route('/send_polis_health')
-def send_polis_health():
+   session.pop('is_child')
 
-   send_email(session['email_user'],text = session['contract_text'])
-   price1 = session['real_price']
+   return render_template('payment.html', real_price=session['real_price'])
 
-   return render_template('payment_health.html', price=price1)
-
-@app.route('/asswecan/<price>', methods=['GET', 'POST'])
+@app.route('/asswecan/<price>', methods=['GET', 'POST']) # Health
 def form_health(price):
    """
    if g.user_id == None:
@@ -101,7 +148,7 @@ def form_health(price):
       return render_template('insurance_health_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -132,6 +179,42 @@ def form_health(price):
       session['birthday'] = request.form['birthday']
 
 
+      try:
+        if request.form['child'] == 'Yes':
+
+            child_second_name = request.form['child_second_name']
+            child_first_name = request.form['child_first_name']
+            child_third_name_kekw = request.form['child_third_name_kekw']
+            session['child_birthday'] = request.form['child_birthday']
+
+            session['contract_text'] = f"""
+            Dear {second_name} {first_name} {third_name_kekw},
+
+            This e-mail is generated automatically and is sent to inform you about the terms of 
+            your {session['price']}-level insurance agreement. Those are the following:
+            The insurance covers health and life of the child {child_second_name} {child_first_name} {child_third_name_kekw} 
+            born on {session['child_birthday']}, 
+            of our customer: {second_name} {first_name} {third_name_kekw} born on {session['birthday']}, 
+            who lives in {city},{town},{street};
+            Insurance`s price will be {real_price} uah a day;
+
+            With kind regards,
+            CumDickCompany
+            """
+
+            session['is_child'] = 1
+
+            status = create_child_contract(f'{child_second_name} {child_first_name} {child_third_name_kekw}',
+                                  g.user_id, 'Child Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+            session['contract_id'] = status
+            connection.close()
+
+
+            return render_template('payment.html', real_price=real_price)
+      except:
+          pass
+
+
       session['contract_text'] = f"""
       Dear {second_name} {first_name} {third_name_kekw},
 
@@ -144,14 +227,18 @@ def form_health(price):
       With kind regards,
       CumDickCompany
       """
-      create_contract(g.user_id, 'Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      status = create_contract(g.user_id, 'Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      session['contract_id'] = status
       connection.close()
 
-      return render_template('payment_health.html', price=real_price)
+
+
+      return render_template('payment.html', real_price=real_price)
 
 
 @app.route('/for_the_alliance/<price>', methods=['GET', 'POST'])
 def car_form(price):
+   print(price)
    cars = ["Audi", "Mazda", "Volkswagen", "BMW", "Mercedes", "Chevrolet", "Renault", "Peugeot", "Fiat","Ford", "Honda",
            "Hyundai", "Toyota", "Nissan", "Daewoo", "Mitsubishi", "Porsche", "Ferrari",
            "Lamborghini", "Bugatti", "Dodge", "Chrysler", "Rolls-Royce", "Cadillac", "Cherry", "Citroen",
@@ -162,9 +249,67 @@ def car_form(price):
    cars.sort()
    if request.method == 'GET':
       return render_template('car_insurance_form.html', price=price, cars=cars)
+   if request.method == 'POST':
+      connection = psycopg2.connect(
+          app.config['SQLALCHEMY_DATABASE_URI']
+         )
+      connection.autocommit = True
+
+      session['price'] = request.form['tariff']
+
+      session['email_user'] = request.form['email']
+
+      if session['price'] == 'beginner':
+         real_price = 80
+      elif session['price'] == 'plusplus':
+         real_price = 150
+      elif session['price'] == 'pro':
+         real_price = 220
+      else:
+         raise Exception
+
+      session['real_price'] = real_price
+
+      second_name = request.form['second_name']
+      first_name = request.form['first_name']
+      third_name_kekw = request.form['third_name_kekw']
+
+      city = request.form['city']
+      town = request.form['town']
+      street = request.form['street']
 
 
-@app.route('/new_contract/<price>', methods=['GET', 'POST'])
+      brand = request.form['car']
+      model = request.form['model']
+      year_of_issue = request.form['year_of_issue']
+      reg_num = request.form['reg_num']
+
+      end_date = request.form['end_date']
+      print(end_date)
+
+      session['contract_text'] = f"""
+      Dear {second_name} {first_name} {third_name_kekw},
+
+      This e-mail is generated automatically and is sent to inform you about the terms of
+      your {session['price']}-level insurance agreement. Those are the following:
+      The insurance covers an automobile of {brand} brand; model: {model}; 
+      Issue year: {year_of_issue}; Registration number: {reg_num};
+
+      We may contact you via mail to:
+      {city},{town},{street}
+      It`s price will be {real_price} uah a day;
+
+      With kind regards,
+      CumDickCompany
+      """
+      status = create_contract(g.user_id, f'Auto - {session["price"]} {brand} {model}', str(real_price), str(end_date), connection)
+      print(g.user_id, f'Auto - {session["price"]} {brand} {model}', str(real_price), str(end_date))
+      session['contract_id'] = status
+      connection.close()
+
+      return render_template('payment.html', real_price=session['real_price'])
+
+@app.route('/new_contract/<price>', methods=['GET', 'POST']) # Household
 def new_contract(price):
    """
    if g.user_id == None:
@@ -175,7 +320,7 @@ def new_contract(price):
       return render_template('flat_form.html', price=price)
    else:
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -216,17 +361,57 @@ def new_contract(price):
       With kind regards,
       CumDickCompany
       """
-      create_contract(g.user_id, 'Household '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      status = create_contract(g.user_id, f'Household - {price} at {town}, {street}', str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      session['contract_id'] = status
       connection.close()
 
-      return render_template('payment.html', price=session['price'], area=session['area'])
+      return render_template('payment.html', real_price=real_price)
 
 
 
 @app.route('/property_insurance/<price>', methods=['GET', 'POST'])
 def property_insurance(price):
+   if request.method == 'GET':
+      return render_template('property_insurance.html', price=session['price'])
+   if request.method == 'POST':
+      connection = psycopg2.connect(
+          app.config['SQLALCHEMY_DATABASE_URI']
+         )
+      connection.autocommit = True
 
-      return render_template('payment.html', price=session['price'])
+
+      session['price'] = request.form['tarif']
+
+      session['email_user'] = request.form['email']
+
+      thing_price = request.form['r_price']
+
+      thing_name = request.form['thing_name']
+
+      session['real_price'] = int(thing_price)/100
+      real_price = session['real_price']
+
+      second_name = request.form['second_name']
+      first_name = request.form['first_name']
+      third_name_kekw = request.form['third_name_kekw']
+
+      session['contract_text'] = f"""
+      Dear {second_name} {first_name} {third_name_kekw},
+
+      This e-mail is generated automatically and is sent to inform you about the terms of
+      your {session['price']}-level insurance agreement. Those are the following:
+      The insurance covers a valuable to the customer thing: {thing_name} 
+      and it's evaluated price is: {thing_price}
+      Therefore, it`s price will be {session['real_price']} uah a day;
+
+      With kind regards,
+      CumDickCompany
+      """
+      status = create_contract(g.user_id, 'Valuables '+str(session['price']), str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      session['contract_id'] = status
+      connection.close()
+
+      return render_template('payment.html', real_price=real_price)
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -242,7 +427,7 @@ def contact():
 @app.route('/update_me', methods=['GET', 'POST'])
 def update_me():
    connection = psycopg2.connect(
-      app.config['SQLALCHEMY_DATABASE_URI']
+       app.config['SQLALCHEMY_DATABASE_URI']
    )
    connection.autocommit = True
    if request.method == 'GET':
@@ -258,7 +443,7 @@ def update_me():
       g.ins_valuables = []
       g.ins_auto = []
 
-      if contracts[0] != None:
+      if contracts != []:
          for real_tup in contracts:
             if 'Household' in real_tup[3]:
                g.ins_house.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
@@ -296,7 +481,7 @@ def update_me():
       g.ins_valuables = []
       g.ins_auto = []
 
-      if contracts[0] != None:
+      if contracts != []:
          for real_tup in contracts:
             if 'Household' in real_tup[3]:
                g.ins_house.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
@@ -355,12 +540,12 @@ def update_me():
       print(status) #TODO Message flashing
 
       connection.close()
-      return render_template('profile_page.html', full_name = f_name, age = age, email=email_u)
+      return render_template('profile_page.html', full_name = f_name, age = age_u, email=email_u)
 
-@app.route('/my_cabinet')
+@app.route('/my_cabinet',methods=['GET'])
 def my_cabinet():
    connection = psycopg2.connect(
-      app.config['SQLALCHEMY_DATABASE_URI']
+       app.config['SQLALCHEMY_DATABASE_URI']
       )
    connection.autocommit = True
 
@@ -376,7 +561,9 @@ def my_cabinet():
    g.ins_valuables = []
    g.ins_auto = []
 
-   if contracts[0] != None:
+   print(contracts)
+
+   if contracts != []:
       for real_tup in contracts:
          if 'Household' in real_tup[3]:
             g.ins_house.append(str(real_tup[3])+' until '+str(real_tup[5]))
@@ -405,7 +592,7 @@ def my_cabinet():
    return render_template('profile_page.html', full_name = full_name, age = age, email=email)
 
 
-def send_email(email, text = 'Tut bude infa pro polis (sorry, ne vstyg zapility)'):
+def send_email(email, text = 'For some reason this text was automatically sent to you. Contact us to fix this bug, please.'):
    msg = MIMEMultipart()
    msg['From'] = 'CumDickCompany'
    msg['To'] = str(email)
@@ -436,7 +623,7 @@ def login():
       session.pop('nickname', None)
 
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -444,13 +631,19 @@ def login():
       password = to_sha(request.form['pass'])
 
       exit_code = login_user(login_name, password, connection)
-      connection.close()
+
 
       if exit_code != -1:
          session['user_id'] = exit_code
          session['nickname'] = login_name
 
+         (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(session['user_id'], connection)[0][
+                                                                        1:-1].split(',')
+
+         session['role'] = role
+
          print('Успішно авторизовано')  # TODO Message Flashing
+         connection.close()
          return redirect(url_for("mainpage"))
       else:
          print('Користувача з таким логіном і паролем не знайдено') #TODO Message Flashing
@@ -461,7 +654,7 @@ def login():
 def register():
    if request.method == 'POST':
       connection = psycopg2.connect(
-         app.config['SQLALCHEMY_DATABASE_URI']
+          app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 

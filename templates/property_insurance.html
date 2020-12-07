@@ -4,7 +4,7 @@
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
                 <h3 class="card-title mt-3 text-center">Страхування цінних речей</h3>
-                <form action="{{url_for('new_contract', price='default')}}" method="post" id="cum" class="needs-validation" novalidate>
+                <form action="{{url_for('property_insurance', price='{{price}}')}}" method="post" id="cum" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -26,7 +26,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Річ, яку бажаєте застрахувати </span>
                          </div>
-                        <input name="second_name" class="form-control" pattern="[a-zA-Z0-9- ]+" type="text"
+                        <input name="thing_name" class="form-control" pattern="[a-zA-Z0-9- ]+" type="text"
                                required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну назву речі!
@@ -36,7 +36,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Вартість вашої речі  </span>
                          </div>
-                        <input name="area" class="form-control" type="number" min="100"
+                        <input name="r_price" class="form-control" type="number" min="100"
                                max="100000" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильну вартість речі!

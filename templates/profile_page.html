@@ -118,7 +118,7 @@
                       <h6 class="mb-0">Health insurance</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      {{g.ins_life[-1]}}
+                      ● {{g.ins_life[-1]}}
                     </div>
                   </div>
                   <hr>
@@ -127,7 +127,12 @@
                       <h6 class="mb-0">House insurance</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      {{g.ins_house}}
+
+                      {% for insurance in g.ins_house %}
+
+                      ● {{insurance}}
+                      <br>
+                      {% endfor %}
                     </div>
                   </div>
                   <hr>
@@ -136,7 +141,11 @@
                       <h6 class="mb-0">Car insurance</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      {{g.ins_auto}}
+                      {% for insurance in g.ins_auto %}
+
+                      ● {{insurance}}
+                      <br>
+                      {% endfor %}
                     </div>
                   </div>
                   <hr>
@@ -145,7 +154,11 @@
                       <h6 class="mb-0">Insurance of valuables</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      {{g.ins_valuables}}
+                      {% for insurance in g.ins_valuables %}
+
+                      ● {{insurance}}
+                      <br>
+                      {% endfor %}
                     </div>
                   </div>
                   <hr>
