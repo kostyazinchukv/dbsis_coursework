@@ -46,7 +46,7 @@
                         <div class="input-group-prepend form-check">
                               <input name="check" class="form-check-input" type="checkbox" value="" id="defaultCheck1"
                                      required>
-                              <label class="form-check-label" for="defaultCheck2">
+                              <label class="form-check-label" for="defaultCheck1">
                                 Підтверджую, що дана ціна є реальною ціною речі, яка страхується, затвердженою
                                 відповідним органом. Я розумію, що в разі вказання невірних даних я не отримаю
                                 страхування та буду занесений до чорного списку цієї компанії.
@@ -140,6 +140,15 @@
                           Будь ласка, введіть правильний email!
                         </div>
                     </div>
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Кінець дії договору
+                    </h5>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Дата кінця дії </span>
+                         </div>
+                        <input name ='begin_date' class="form-control" type="date" value="2000-01-01" min="2000-01-01"
+                               max="2000-01-01" id="date1" required>
+                    </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
                         Прийняття індивідуальної пропозиції
                     </h5>
@@ -192,9 +201,18 @@
         if(m<10){
             m='0'+m
         }
+        m1 = m + 1;
+        if(m1>12){
+            m1='01'
+            }
         date = today = y+'-'+m+'-'+d;
+        min_contract_date = today = y+'-'+m1+'-'+d;
         max_contract_date = today = y+100+'-'+m+'-'+d;
         max_birth_date = today = y-18+'-'+m+'-'+d;
+            document.getElementById("date1").setAttribute("min", min_contract_date);
+            document.getElementById('date1').setAttribute("value", min_contract_date);
+            document.getElementById('date1').setAttribute("max", max_contract_date);
+
             document.getElementById('birth').setAttribute("value", max_birth_date);
             document.getElementById('birth').setAttribute("max", max_birth_date);
 
