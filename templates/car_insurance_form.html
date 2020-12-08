@@ -1,10 +1,10 @@
-{%extends 'jinja_forms.html'%}
-{% block content %}
-    <div class="container">
+{%extends 'jinja_forms.html' %}
+{%block content%}
+<div class="container">
         <div class="card bg-light">
             <article class="card-body mx-auto" style="max-width: 800px;">
-                <h3 class="card-title mt-3 text-center">Страхування життя</h3>
-                <form action="{{url_for('form_health', price = 'beginner')}}" method="post" class="needs-validation" novalidate>
+                <h3 class="card-title mt-3 text-center">Страхування авто</h3>
+                <form action="{{url_for('car_form', price = '{{price}}')}}" method="post" class="needs-validation" novalidate>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend form-check">
 
@@ -25,84 +25,87 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Ціна </span>
                          </div>
-
                         {%if price == 'beginner'%}
-                        <input name ='tar_price' class="form-control" type="text" value="34грн/день" id="price_tar_b"
+                        <input name ='tar_price' class="form-control" type="text" value="80грн/день" id="price_tar_b"
                                readonly>
                         {%elif price == 'plusplus'%}
-
-
-
-                        <input name ='tar_price' class="form-control" type="text" value="45грн/день" id="price_tar_m"
+                        <input name ='tar_price' class="form-control" type="text" value="150грн/день" id="price_tar_m"
                                readonly>
                         {%elif price == 'pro'%}
-                        <input name ='tar_price' class="form-control" type="text" value="60грн/день" id="price_tar_p"
+                        <input name ='tar_price' class="form-control" type="text" value="220грн/день" id="price_tar_p"
                                readonly>
                         {% endif %}
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії та кінець договору
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Кінець дії договору
                     </h5>
+
                     <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата початку дії </span>
-                         </div>
-                        <input name ='begin_date' class="form-control" type="date" min = "00-00-0000" value="2000-01-01" id="example-date-input"
-                               required>
-                    </div>
-                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата кінця дії </span>
                          </div>
-                        <input name ='end_date' class="form-control" type="date" value="2000-01-01" id="example-end-date-input"
+                        <input name ='end_date' class="form-control" type="date" value="2021-01-01" id="example-end-date-input"
                                required>
                     </div>
 
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">
-                        Страхування дитини
-                    </h5>
 
+
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про транспортний засіб
+                    </h5>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Оберіть цю опцію, якщо бажаєте застрахувати совю дитину </span>
+                            <span class="input-group-text"> Марка автомобіля </span>
                          </div>
-                        <input name ='child' class="form-control" type="checkbox" value="Yes" id="example-child-box">
+                        <select name="car" class="custom-select form-control" id="inputGroupSelectCar">
+                            <option selected>Виберіть Марку</option>
+                            {%for car in cars%}
+                            <option value = "{{car.lower()}}">{{car}}</option>
+                            {%endfor%}
+                          </select>
                     </div>
-                    <div class = "child hidden">
-                        <div class="form-group input-group input-group-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"> Прізвище дитини </span>
-                             </div>
-                            <input name="child_second_name" id="child-surname" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text">
-                            <div class="invalid-feedback">
-                              Будь ласка, введіть правильне прізвище!
-                            </div>
-                        </div>
-                        <div class="form-group input-group input-group-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"> Ім'я дитини </span>
-                             </div>
-                            <input name="child_first_name" class="form-control" pattern="[a-zA-Z]+" type="text">
-                            <div class="invalid-feedback">
-                              Будь ласка, введіть правильне ім'я!
-                            </div>
-                        </div>
-                        <div class="form-group input-group input-group-lg">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"> По батькові дитини </span>
-                             </div>
-                            <input name="child_third_name_kekw" class="form-control" pattern="[a-zA-Z]+" type="text">
-                            <div class="invalid-feedback">
-                              Будь ласка, введіть правильне ім'я по батькові!
-                            </div>
-                        </div>
-                        <div class="form-group input-group input-group-lg">
+                    <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата народження дитини</span>
+                            <span class="input-group-text"> Модель </span>
                          </div>
-                        <input name ='child_birthday' class="form-control" type="date" max = "" value="2000-01-01" id="example-child-e-input"
-                               >
+                        <input name="model" class="form-control" pattern="[a-zA-Z0-9\-]+" type="text" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильну модель!
+                        </div>
                     </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Реєстраційний номер авто</span>
+                         </div>
+                        <input name="reg_num" class="form-control" pattern="[А-Я][А-Я][0-9][0-9][0-9][0-9][А-Я][А-Я]" type="text" placeholder="СС1488АГ" required >
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний реєстраційний номер авто!
+                        </div>
                     </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Номер кузова авто </span>
+                         </div>
+                        <input name="index" class="form-control" pattern="[a-zA-Z0-9]"
+                               type="text" placeholder="asd123qwe456" required>
+                        <div class="invalid-feedback">
+                          Будь ласка, введіть правильний номер кузова(9-17 букв/цифр без пробілів)!
+                        </div>
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> Рік випуску </span>
+                         </div>
+                        <select name="year_of_issue" class="custom-select form-control" id="inputYearOfIssue">
+                            <option selected>Виберіть рік випуску</option>
+                           {%for i in range(1980, 2021)%}
+                            <option value = "{{i}}">{{i}}</option>
+                            {%endfor%}
+                          </select>
+                    </div>
+
+
+
+
+
 
 
 
@@ -122,7 +125,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Прізвище </span>
                          </div>
-                        <input name="second_name" class="form-control" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]" type="text" required >
+                        <input name="second_name" class="form-control" pattern="[a-zA-Z\-]+" type="text" required >
                         <div class="invalid-feedback">
                           Будь ласка, введіть правильне прізвище!
                         </div>
@@ -169,7 +172,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата народження </span>
                          </div>
-                        <input name ='birthday' class="form-control" type="date" max = "" value="2000-01-01" id="example-e-input"
+                        <input name ='birthday' class="form-control" type="date" value="2000-01-01" id="example-e-input"
                                required>
                     </div>
                     <div class="form-group input-group input-group-lg">
@@ -188,14 +191,14 @@
                          </div>
                         <input name="cumpany" class="form-control" pattern="[a-zA-Z ]+" type="text" required >
                         <div class="invalid-feedback">
-                          Будь ласка, введіть правильну назву органу, що видав!
+                          Будь ласка, введіть правильне прізвище!
                         </div>
                     </div>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата видання </span>
                          </div>
-                        <input name ='date_of_issue' class="form-control" type="date" max = "" value="2000-01-01" id="example-a-input"
+                        <input name ='date_of_issue' class="form-control" type="date" value="2000-01-01" id="example-a-input"
                                required>
                     </div>
                     <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Інформація про місце проживання клієнта
@@ -300,52 +303,33 @@
             </article>
         </div>
     </div>
-    <script>
-        const checkbox = document.getElementById('example-child-box');
-        const childForm = document.getElementsByClassName('child')[0];
-        checkbox.addEventListener('click', () =>{
-            if (checkbox.checked) {
-                childForm.classList.remove('hidden');
-                return;
-            }
-            childForm.classList.add('hidden');
-        });
-    </script>
-    <script src="{{ url_for('static', filename = 'js/child.js') }}"></script>
+    <script src="{{ url_for('static', filename = 'js/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/jquery.maskedinput.min.js') }}"></script>
-    <script>
-    $(function(){
-      $("#phone").mask("+38(999) 999-99-99");
-    });
-    </script>
     <script>
       document.title = "Страхування авто";
       n = new Date();
       y = n. getFullYear();
       m = n. getMonth() + 1;
       d = n. getDate();
-      tomorrow = d+1;
+      tommorow = d+1;
       if(d<10){
-       d='0'+d;
-          tomorrow = '0' + tomorrow;
+          d='0'+d;
+          tommorow = '0' + tommorow;
    }
    if(m<10){
        m='0'+m;
    }
    today = y+'-'+m+'-'+d;
-   tomorrow_date= y+'-'+m+'-'+tomorrow;
+   tommorow_date= y+'-'+m+'-'+tommorow;
    min_birth_date  = y-18+'-'+m+'-'+d;
     document. getElementById("example-date-input").setAttribute("min", today);
     document. getElementById("example-date-input").setAttribute("value", today);
-    document. getElementById("example-end-date-input").setAttribute("min", tomorrow_date);
-    document. getElementById("example-end-date-input").setAttribute("value", tomorrow_date);
+    document. getElementById("example-end-date-input").setAttribute("min", tommorow_date);
+    document. getElementById("example-end-date-input").setAttribute("value", tommorow_date);
     document. getElementById("example-a-input").setAttribute("max", today);
     document. getElementById("example-a-input").setAttribute("value", today);
 
     document. getElementById("example-e-input").setAttribute("max", min_birth_date);
     document. getElementById("example-e-input").setAttribute("value", min_birth_date);
-
-    document. getElementById("example-child-e-input").setAttribute("max", today);
-    document. getElementById("example-child-e-input").setAttribute("value", today);
 </script>
-{% endblock %}
+{%endblock%}

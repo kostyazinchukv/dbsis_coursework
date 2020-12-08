@@ -61,28 +61,31 @@
               </div>
 -->
             </div>
+
             <div class="col-md-8">
+                <form action="{{url_for('update_me')}}" method="post">
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]">Full Name</span>
                       </div>
-                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      <input type="text" name = 'fname' value="{{g.fname[1:-1]}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                   </div>
                   <hr>
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Email</span>
+                        <span class="input-group-text"  id="inputGroup-sizing-default">Email</span>
                       </div>
-                      <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      <input type="email" name = 'email' value="{{g.email}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                   </div>
+
                   <hr>
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Date of birth</span>
                       </div>
-                      <input type="date" class="form-control" name ='date' aria-label="Default" aria-describedby="inputGroup-sizing-default" value="2000-01-01" min="1875-01-01" max="2020-01-01" id="birth">
+                      <input type="date" name = 'birthdate' class="form-control" name ='date' aria-label="Default" aria-describedby="inputGroup-sizing-default" value="2000-01-01" min="1875-01-01" max="2020-01-01" id="birth">
                   </div>
                   <hr>
 <!--
@@ -117,27 +120,37 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Health insurance</span>
                       </div>
-                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                      <input type="text" value="{{g.ins_life[-1]}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
                   <hr>
                   <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Property insurance</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">House insurance</span>
                       </div>
-                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                      <input type="text" value="{{g.ins_house}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
                   <hr>
-                  <div class="input-group mb-3">
+                    <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Car insurance</span>
                       </div>
-                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                      <input type="text" value="{{g.ins_auto}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
+                    <hr>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Valuables insurance</span>
+                      </div>
+                      <input type="text" value="{{g.ins_valuables}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
+                  </div>
+
                   <hr>
-                    <button type="button" class="btn btn-success">Confirm</button>
+                    <input type="submit" class="btn btn-success" value = 'Confirm'></input>
                 </div>
               </div>
+                    </form>
             </div>
+
           </div>
         </div>
     </div>
