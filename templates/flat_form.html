@@ -107,11 +107,11 @@
                           Будь ласка, введіть правильну адресу!
                         </div>
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії договору
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Кінець дії договору
                     </h5>
                     <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата початку дії </span>
+                            <span class="input-group-text"> Дата кінця дії </span>
                          </div>
                         <input name ='begin_date' class="form-control" type="date" value="2000-01-01" min="2000-01-01"
                                max="2000-01-01" id="date1" required>
@@ -330,11 +330,16 @@
         if(m<10){
             m='0'+m
         }
+        m1 = m + 1;
+        if(m1>12){
+            m1='01'
+            }
         date = today = y+'-'+m+'-'+d;
+        min_contract_date = today = y+'-'+m1+'-'+d;
         max_contract_date = today = y+100+'-'+m+'-'+d;
         max_birth_date = today = y-14+'-'+m+'-'+d;
-            document.getElementById("date1").setAttribute("min", date);
-            document.getElementById('date1').setAttribute("value", date);
+            document.getElementById("date1").setAttribute("min", min_contract_date);
+            document.getElementById('date1').setAttribute("value", min_contract_date);
             document.getElementById('date1').setAttribute("max", max_contract_date);
 
             document.getElementById('birth').setAttribute("value", max_birth_date);
