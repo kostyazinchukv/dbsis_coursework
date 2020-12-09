@@ -40,15 +40,9 @@
                                readonly>
                         {% endif %}
                     </div>
-                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Початок дії та кінець договору
+                    <h5 style="text-align:center; margin-bottom: 20px; margin-top: 20px;">Кінець договору
                     </h5>
-                    <div class="form-group input-group input-group-lg">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> Дата початку дії </span>
-                         </div>
-                        <input name ='begin_date' class="form-control" type="date" min = "00-00-0000" value="2000-01-01" id="example-date-input"
-                               required>
-                    </div>
+
                      <div class="form-group input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> Дата кінця дії </span>
@@ -319,33 +313,42 @@
     });
     </script>
     <script>
-      document.title = "Страхування авто";
-      n = new Date();
-      y = n. getFullYear();
-      m = n. getMonth() + 1;
-      d = n. getDate();
-      tomorrow = d+1;
-      if(d<10){
-       d='0'+d;
-          tomorrow = '0' + tomorrow;
-   }
-   if(m<10){
-       m='0'+m;
-   }
-   today = y+'-'+m+'-'+d;
-   tomorrow_date= y+'-'+m+'-'+tomorrow;
-   min_birth_date  = y-18+'-'+m+'-'+d;
-    document. getElementById("example-date-input").setAttribute("min", today);
-    document. getElementById("example-date-input").setAttribute("value", today);
-    document. getElementById("example-end-date-input").setAttribute("min", tomorrow_date);
-    document. getElementById("example-end-date-input").setAttribute("value", tomorrow_date);
-    document. getElementById("example-a-input").setAttribute("max", today);
-    document. getElementById("example-a-input").setAttribute("value", today);
+        document.title = "Страхування життя";
+        n = new Date();
+        y = n. getFullYear();
+        m = n. getMonth() + 1;
+        d = n. getDate();
+        next_month = m+1;
+        next_year = y;
+        if(d<10){
+            d='0'+d;
 
-    document. getElementById("example-e-input").setAttribute("max", min_birth_date);
-    document. getElementById("example-e-input").setAttribute("value", min_birth_date);
+        }
+        if(next_month===13)
+        {
+            next_month = 1;
+            next_year = y+1;
+        }
+        if(next_month<10)
+        {
+            next_month = '0' + next_month;
+        }
+        if(m<10){
+            m='0'+m;
+        }
+        today = y+'-'+m+'-'+d;
+        min_birth_date  = y-18+'-'+m+'-'+d;
+        next_month_date = y+'-'+next_month+'-'+d;
+        next_month_date = next_year+'-'+next_month+'-'+d;
+        document. getElementById("example-end-date-input").setAttribute("min", next_month_date);
+        document. getElementById("example-end-date-input").setAttribute("value", next_month_date);
+        document. getElementById("example-a-input").setAttribute("max", today);
+        document. getElementById("example-a-input").setAttribute("value", today);
+        document. getElementById("example-child-e-input").setAttribute("max", today);
+        document. getElementById("example-child-e-input").setAttribute("min", min_birth_date);
+        document. getElementById("example-child-e-input").setAttribute("value", min_birth_date);
 
-    document. getElementById("example-child-e-input").setAttribute("max", today);
-    document. getElementById("example-child-e-input").setAttribute("value", today);
+        document. getElementById("example-e-input").setAttribute("max", min_birth_date);
+        document. getElementById("example-e-input").setAttribute("value", min_birth_date);
 </script>
 {% endblock %}
