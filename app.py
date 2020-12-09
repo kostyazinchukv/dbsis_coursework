@@ -1,4 +1,4 @@
-from flask import Flask,render_template,redirect,url_for,request, session, g
+from flask import Flask,render_template,redirect,url_for,request, session, g, flash
 from config import Config
 import smtplib
 import psycopg2
@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract,\
    update_customer,get_customer_by_login,get_customer_i_by_login,update_customer_role,update_payment_status,\
-    update_child_payment_status,create_child_contract
+    update_child_payment_status,create_child_contract,get_children_by_login
 import datetime
 import hashlib
 
@@ -33,6 +33,7 @@ def before_request():
    g.admin_name = None
    g.admin_card = None
    g.admin_role = None
+   g.childs = []
 
 
    if ('user_id' in session) and ('nickname' in session) and ('role' in session):
@@ -46,30 +47,28 @@ def before_request():
 def red():
    return redirect(url_for('mainpage'))
 
-@app.route('/update_role', methods=['POST'])
+@app.route('/users/update_role', methods=['POST'])
 def update_role():
 
    connection = psycopg2.connect(
-       app.config['SQLALCHEMY_DATABASE_URI']
+      app.config['SQLALCHEMY_DATABASE_URI']
    )
    connection.autocommit = True
 
    update_customer_role(session['log'],request.form['radio'],connection)
-
-   # TODO Message
 
    connection.close()
 
    return redirect(url_for('admin_page'))
 
 
-@app.route('/admin_page', methods=['GET', 'POST'])
+@app.route('/users/admin_page', methods=['GET', 'POST'])
 def admin_page():
    if g.c_role == '"Full Master"' or g.c_role =='"Fucking Slave"':
       if request.method == 'POST':
 
          connection = psycopg2.connect(
-             app.config['SQLALCHEMY_DATABASE_URI']
+            app.config['SQLALCHEMY_DATABASE_URI']
          )
          connection.autocommit = True
 
@@ -88,11 +87,13 @@ def admin_page():
          elif g.admin_role == 'leatherman':
             g.admin_role_user = 'Користувач'
 
-         print(g.admin_role_user)
+         g.childs = get_children_by_login(session['log'],connection)
+         print(g.childs)
 
-      return render_template('admin_page.html')
+      return render_template('users/admin_page.html')
+
    else:
-      #TODO Message Flashing
+      flash('Ви не адмін!')
       return redirect(url_for('mainpage'))
 
 @app.route('/mainpage', methods=['GET', 'POST'])
@@ -100,9 +101,9 @@ def mainpage():
     return render_template('mainpage.html')
 
 
-@app.route('/cases',methods=['GET'])
+@app.route('/contracts/cases',methods=['GET'])
 def cases():
-    return render_template('insurance_case.html')
+    return render_template('contracts/insurance_case.html')
 
 
 @app.route('/send_polis')
@@ -133,11 +134,14 @@ def payment():
    else:
       update_payment_status(session['contract_id'])
 
-   session.pop('is_child')
+   try:
+      session.pop('is_child')
+   except:
+      pass
 
    return render_template('payment.html', real_price=session['real_price'])
 
-@app.route('/asswecan/<price>', methods=['GET', 'POST']) # Health
+@app.route('/contracts/health_insurance/<price>', methods=['GET', 'POST']) # Health
 def form_health(price):
    """
    if g.user_id == None:
@@ -145,10 +149,10 @@ def form_health(price):
       return redirect(url_for('login'))
    """
    if request.method == 'GET':
-      return render_template('insurance_health_form.html', price=price)
+      return render_template('contracts/insurance_health_form.html', price=price)
    else:
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -236,7 +240,7 @@ def form_health(price):
       return render_template('payment.html', real_price=real_price)
 
 
-@app.route('/for_the_alliance/<price>', methods=['GET', 'POST'])
+@app.route('/contracts/auto_insurance/<price>', methods=['GET', 'POST'])
 def car_form(price):
    print(price)
    cars = ["Audi", "Mazda", "Volkswagen", "BMW", "Mercedes", "Chevrolet", "Renault", "Peugeot", "Fiat","Ford", "Honda",
@@ -248,10 +252,10 @@ def car_form(price):
            ]
    cars.sort()
    if request.method == 'GET':
-      return render_template('car_insurance_form.html', price=price, cars=cars)
+      return render_template('contracts/car_insurance_form.html', price=price, cars=cars)
    if request.method == 'POST':
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -309,7 +313,7 @@ def car_form(price):
 
       return render_template('payment.html', real_price=session['real_price'])
 
-@app.route('/new_contract/<price>', methods=['GET', 'POST']) # Household
+@app.route('/contracts/household_insurance/<price>', methods=['GET', 'POST']) # Household
 def new_contract(price):
    """
    if g.user_id == None:
@@ -317,10 +321,10 @@ def new_contract(price):
       return redirect(url_for('login'))
    """
    if request.method == 'GET':
-      return render_template('flat_form.html', price=price)
+      return render_template('contracts/flat_form.html', price=price)
    else:
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -369,13 +373,13 @@ def new_contract(price):
 
 
 
-@app.route('/property_insurance/<price>', methods=['GET', 'POST'])
+@app.route('/contracts/property_insurance/<price>', methods=['GET', 'POST'])
 def property_insurance(price):
    if request.method == 'GET':
-      return render_template('property_insurance.html', price=session['price'])
+      return render_template('contracts/property_insurance.html', price=session['price'])
    if request.method == 'POST':
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -421,13 +425,12 @@ def contact():
 
       text2 = "Question by: "+request.form['name']+ '\n'+request.form['text']+'\nR.S.V.P to ' +request.form['email']
       send_email('8889344@ukr.net', text=text2)
-      #TODO Message OK
       return render_template('contact.html')
 
-@app.route('/update_me', methods=['GET', 'POST'])
+@app.route('/users/me/update_me', methods=['GET', 'POST'])
 def update_me():
    connection = psycopg2.connect(
-       app.config['SQLALCHEMY_DATABASE_URI']
+      app.config['SQLALCHEMY_DATABASE_URI']
    )
    connection.autocommit = True
    if request.method == 'GET':
@@ -470,7 +473,7 @@ def update_me():
          g.ins_auto = ['Не укладено жодного']
 
 
-      return render_template('edit_profile_page.html')
+      return render_template('users/edit_profile_page.html')
    else:
       (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(g.user_id, connection)[0][
                                                                        1:-1].split(',')
@@ -537,15 +540,13 @@ def update_me():
 
       status = update_customer(u_id, log_u, email_u, age_u, f_name, bank, connection)
 
-      print(status) #TODO Message flashing
-
       connection.close()
-      return render_template('profile_page.html', full_name = f_name, age = age_u, email=email_u)
+      return render_template('users/profile_page.html', full_name = f_name, age = age_u, email=email_u)
 
-@app.route('/my_cabinet',methods=['GET'])
+@app.route('/users/me/my_cabinet',methods=['GET'])
 def my_cabinet():
    connection = psycopg2.connect(
-       app.config['SQLALCHEMY_DATABASE_URI']
+      app.config['SQLALCHEMY_DATABASE_URI']
       )
    connection.autocommit = True
 
@@ -589,7 +590,7 @@ def my_cabinet():
    if g.ins_auto == []:
       g.ins_auto = ['Не укладено жодного']
 
-   return render_template('profile_page.html', full_name = full_name, age = age, email=email)
+   return render_template('users/profile_page.html', full_name = full_name, age = age, email=email)
 
 
 def send_email(email, text = 'For some reason this text was automatically sent to you. Contact us to fix this bug, please.'):
@@ -613,17 +614,17 @@ def send_email(email, text = 'For some reason this text was automatically sent t
 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/users/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'GET':
-      return render_template('sign_in.html')
+      return render_template('users/sign_in.html')
 
    elif request.method == 'POST':
       session.pop('user_id', None)
       session.pop('nickname', None)
 
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -642,19 +643,18 @@ def login():
 
          session['role'] = role
 
-         print('Успішно авторизовано')  # TODO Message Flashing
          connection.close()
          return redirect(url_for("mainpage"))
       else:
-         print('Користувача з таким логіном і паролем не знайдено') #TODO Message Flashing
-         return render_template('sign_in.html')
+         flash('Користувача з таким логіном і паролем не знайдено')
+         return render_template('users/sign_in.html')
 
 
-@app.route('/register', methods = ['GET', 'POST'])
+@app.route('/users/register', methods = ['GET', 'POST'])
 def register():
    if request.method == 'POST':
       connection = psycopg2.connect(
-          app.config['SQLALCHEMY_DATABASE_URI']
+         app.config['SQLALCHEMY_DATABASE_URI']
          )
       connection.autocommit = True
 
@@ -685,26 +685,29 @@ def register():
       card = request.form['card']
       if password1 == password2:
          status = registration(login, password1, email, age, name, card,connection)
-         print(status)
+         flash(status)
          connection.close()
+         if 'помилка' in status.lower():
+            return render_template('users/registration.html')
          return render_template('mainpage.html')
       else:
          connection.close()
-         #print(status)
-         return render_template('registration.html')
+         flash('Введені паролі не співпадають')
+         return render_template('users/registration.html')
    if request.method == 'GET' and g.user_id == None:
-      return render_template('registration.html')
+      return render_template('users/registration.html')
    else:
       redirect(url_for('mainpage'))
 
 
 
-@app.route('/logout')
+@app.route('/users/logout')
 def logout():
    session.pop('user_id', None)
    session.pop('nickname', None)
    g.nickname = None
    g.user_id = None
+
    return render_template('mainpage.html')
 
 

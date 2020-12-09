@@ -18,4 +18,11 @@
 
 
               </div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for msg in messages %}
+                    <script> setTimeout(alert('{{msg}}'),3000) </script>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
 </nav>

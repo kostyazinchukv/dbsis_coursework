@@ -86,6 +86,26 @@ def get_customer_by_login(customer_log, connection):
 
     return result
 
+
+
+def get_children_by_login(customer_log, connection):
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+        SELECT CHILDREN_CONTRACTS.CHILD_NAME, CHILDREN_CONTRACTS.CONTRACT_DATE, CHILDREN_CONTRACTS.CONTRACT_END_DATE,
+					CHILDREN_CONTRACTS.CONTRACT_IS_PAID,CHILDREN_CONTRACTS.CONTRACT_TYPE
+        FROM CUSTOMERS JOIN CHILDREN_CONTRACTS ON customers.customer_id = CHILDREN_CONTRACTS.fk_customer_id
+        WHERE customers.customer_login = '{customer_log}';""")
+
+
+
+    result = cursor.fetchall()
+
+    return result
+
+
+
 def get_customer_i_by_login(customer_log, connection):
     'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
     cursor = connection.cursor()
