@@ -5,10 +5,12 @@ import hashlib
 def registration(login, password, email, age, name, card, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
+    print(login, password, email, age, name, card, connection)
     
     cursor.callproc('register_customer', (login, password, email, age, name, card))
     
     status = cursor.fetchone()[0]
+    print(status)
     
     return status
 
@@ -184,6 +186,17 @@ def get_contract_by_cust(customer_id, connection):
     
     result = cursor.fetchall()
     
+    return result
+
+
+def get_child_contract_by_cust12(customer_id, connection):
+    'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"select * from children_contracts where children_contracts.fk_customer_id = {customer_id}")
+
+    result = cursor.fetchall()
+
     return result
 
 

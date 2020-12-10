@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from python.connection_BD import registration,login_user,get_customer_info,get_contract_by_cust,create_contract,\
    update_customer,get_customer_by_login,get_customer_i_by_login,update_customer_role,update_payment_status,\
-    update_child_payment_status,create_child_contract,get_children_by_login
+    update_child_payment_status,create_child_contract,get_children_by_login, get_child_contract_by_cust12
 import datetime
 import hashlib
 
@@ -145,7 +145,7 @@ def payment():
 def form_health(price):
    """
    if g.user_id == None:
-      print('Спершу увійдіть') #TODO Message Flashing
+      print('Спершу увійдіть')
       return redirect(url_for('login'))
    """
    if request.method == 'GET':
@@ -182,6 +182,8 @@ def form_health(price):
       street = request.form['street']
       session['birthday'] = request.form['birthday']
 
+      end_date = request.form['end_date']
+
 
       try:
         if request.form['child'] == 'Yes':
@@ -209,7 +211,7 @@ def form_health(price):
             session['is_child'] = 1
 
             status = create_child_contract(f'{child_second_name} {child_first_name} {child_third_name_kekw}',
-                                  g.user_id, 'Child Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+                                  g.user_id, f'Child Life {session["price"]}', str(real_price), end_date, connection)
             session['contract_id'] = status
             connection.close()
 
@@ -231,7 +233,7 @@ def form_health(price):
       With kind regards,
       CumDickCompany
       """
-      status = create_contract(g.user_id, 'Life '+price, str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      status = create_contract(g.user_id, f'Life {session["price"]}', str(real_price), end_date, connection)
       session['contract_id'] = status
       connection.close()
 
@@ -317,7 +319,7 @@ def car_form(price):
 def new_contract(price):
    """
    if g.user_id == None:
-      print('Спершу увійдіть') #TODO Message Flashing
+      print('Спершу увійдіть')
       return redirect(url_for('login'))
    """
    if request.method == 'GET':
@@ -353,6 +355,8 @@ def new_contract(price):
       town = request.form['town']
       street = request.form['street']
 
+      end_date = request.form['begin_date']
+
       session['contract_text'] = f"""
       Dear {second_name} {first_name} {third_name_kekw},
 
@@ -365,7 +369,7 @@ def new_contract(price):
       With kind regards,
       CumDickCompany
       """
-      status = create_contract(g.user_id, f'Household - {price} at {town}, {street}', str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      status = create_contract(g.user_id, f'Household - {price} at {town}, {street}', str(real_price), end_date, connection)
       session['contract_id'] = status
       connection.close()
 
@@ -399,6 +403,8 @@ def property_insurance(price):
       first_name = request.form['first_name']
       third_name_kekw = request.form['third_name_kekw']
 
+      end_date = request.form['begin_date']
+
       session['contract_text'] = f"""
       Dear {second_name} {first_name} {third_name_kekw},
 
@@ -411,7 +417,7 @@ def property_insurance(price):
       With kind regards,
       CumDickCompany
       """
-      status = create_contract(g.user_id, 'Valuables '+str(session['price']), str(real_price), '2022-10-10', connection) # TODO Пофіксити на нормальну дату
+      status = create_contract(g.user_id, 'Valuables '+str(session['price']), str(real_price), end_date, connection)
       session['contract_id'] = status
       connection.close()
 
@@ -553,6 +559,10 @@ def my_cabinet():
    (customer_id, full_name, age, email, passw, login, bank, role) = get_customer_info(g.user_id,connection)[0][1:-1].split(',')
 
    contracts = get_contract_by_cust(customer_id, connection)
+
+   child_contracts = get_child_contract_by_cust12(customer_id, connection)
+   print(child_contracts)
+
    connection.close()
 
 
@@ -561,6 +571,7 @@ def my_cabinet():
    g.ins_life = []
    g.ins_valuables = []
    g.ins_auto = []
+   g.ins_childs = []
 
    print(contracts)
 
@@ -575,11 +586,18 @@ def my_cabinet():
          elif 'Auto' in real_tup[3]:
             g.ins_auto.append(str(real_tup[3]) + ' until ' + str(real_tup[5]))
 
+      if child_contracts != []:
+         for real_tup in child_contracts:
+            if 'Child' in real_tup[4]:
+               g.ins_childs.append(str(real_tup[4]) +" "+ str(real_tup[2]) + ' until ' +str(real_tup[6]))
+
+
    else:
       g.ins_house = ['Не укладено жодного']
       g.ins_life = ['Не укладено жодного']
       g.ins_valuables = ['Не укладено жодного']
       g.ins_auto = ['Не укладено жодного']
+      g.ins_childs = ['Не укладено жодного']
 
    if g.ins_house == []:
       g.ins_house = ['Не укладено жодного']
@@ -589,6 +607,8 @@ def my_cabinet():
       g.ins_valuables = ['Не укладено жодного']
    if g.ins_auto == []:
       g.ins_auto = ['Не укладено жодного']
+   if g.ins_childs == []:
+      g.ins_childs = ['Не укладено жодного']
 
    return render_template('users/profile_page.html', full_name = full_name, age = age, email=email)
 

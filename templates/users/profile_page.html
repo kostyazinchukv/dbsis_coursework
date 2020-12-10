@@ -117,14 +117,34 @@
                     </div>
                   </div>
                   <hr>-->
+
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Insurance of Children</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {% for insurance in g.ins_childs %}
+
+                      ● {{insurance}}
+                      <br>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <hr>
+
+
                   <div class="row">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Health insurance</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
                       ● {{g.ins_life[-1]}}
+
                     </div>
                   </div>
+
+
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
@@ -165,7 +185,10 @@
                       {% endfor %}
                     </div>
                   </div>
-                  <hr>
+
+
+
+
                 </div>
               </div>
             </div>
