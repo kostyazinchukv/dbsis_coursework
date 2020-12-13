@@ -380,7 +380,7 @@ def new_contract(price):
 @app.route('/contracts/property_insurance/<price>', methods=['GET', 'POST'])
 def property_insurance(price):
    if request.method == 'GET':
-      return render_template('contracts/property_insurance.html', price=session['price'])
+      return render_template('contracts/property_insurance.html', price='pro')
    if request.method == 'POST':
       connection = psycopg2.connect(
          app.config['SQLALCHEMY_DATABASE_URI']
