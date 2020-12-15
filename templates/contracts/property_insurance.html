@@ -204,9 +204,10 @@
         m1 = m + 1;
         if(m1>12){
             m1='01'
+            y1=y+1
             }
         date = today = y+'-'+m+'-'+d;
-        min_contract_date = today = y+'-'+m1+'-'+d;
+        min_contract_date = today = y1+'-'+m1+'-'+d;
         max_contract_date = today = y+100+'-'+m+'-'+d;
         max_birth_date = today = y-18+'-'+m+'-'+d;
             document.getElementById("date1").setAttribute("min", min_contract_date);
