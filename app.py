@@ -21,7 +21,6 @@ app = Flask(__name__)
 
 
 app.config.from_object(Config)
-#app.secret_key = 'Heil_Adolf_зшзHitler'
 
 
 @app.before_request
