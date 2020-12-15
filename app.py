@@ -21,7 +21,6 @@ app = Flask(__name__)
 
 
 app.config.from_object(Config)
-#app.secret_key = 'Heil_Adolf_зшзHitler'
 
 
 @app.before_request
@@ -705,11 +704,12 @@ def register():
       card = request.form['card']
       if password1 == password2:
          status = registration(login, password1, email, age, name, card,connection)
-         flash(status)
          connection.close()
          if 'помилка' in status.lower():
+            flash('Помилка при реєстрації')
             return render_template('users/registration.html')
-         return render_template('mainpage.html')
+         else:
+            return render_template('mainpage.html')
       else:
          connection.close()
          flash('Введені паролі не співпадають')
