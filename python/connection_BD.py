@@ -5,10 +5,12 @@ import hashlib
 def registration(login, password, email, age, name, card, connection):
     'Повертає статус у вигляді текстового рядка'
     cursor = connection.cursor()
+    print(login, password, email, age, name, card, connection)
     
     cursor.callproc('register_customer', (login, password, email, age, name, card))
     
     status = cursor.fetchone()[0]
+    print(status)
     
     return status
 
@@ -85,6 +87,26 @@ def get_customer_by_login(customer_log, connection):
     result = cursor.fetchall()
 
     return result
+
+
+
+def get_children_by_login(customer_log, connection):
+    'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"""	
+        SELECT CHILDREN_CONTRACTS.CHILD_NAME, CHILDREN_CONTRACTS.CONTRACT_DATE, CHILDREN_CONTRACTS.CONTRACT_END_DATE,
+					CHILDREN_CONTRACTS.CONTRACT_IS_PAID,CHILDREN_CONTRACTS.CONTRACT_TYPE
+        FROM CUSTOMERS JOIN CHILDREN_CONTRACTS ON customers.customer_id = CHILDREN_CONTRACTS.fk_customer_id
+        WHERE customers.customer_login = '{customer_log}';""")
+
+
+
+    result = cursor.fetchall()
+
+    return result
+
+
 
 def get_customer_i_by_login(customer_log, connection):
     'Повертає кортеж з (customer_id, Імя, е-mail, password, login, карта банку, role)'
@@ -164,6 +186,17 @@ def get_contract_by_cust(customer_id, connection):
     
     result = cursor.fetchall()
     
+    return result
+
+
+def get_child_contract_by_cust12(customer_id, connection):
+    'Повертає кортеж з (contract_id, customer_id, дата укладання, тип контракту, ціна на день, кінцева дата терміну дії)'
+    cursor = connection.cursor()
+
+    cursor.execute(f"select * from children_contracts where children_contracts.fk_customer_id = {customer_id}")
+
+    result = cursor.fetchall()
+
     return result
 
 

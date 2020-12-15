@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <title>Особистий кабінет</title>
+
+    <style type="text/css">
+          footer{position:absolute; bottom:0; width:100%;}
+      </style>
 </head>
 <body>
     {%include 'nav.html' %}
@@ -27,10 +31,8 @@
                   <div class="d-flex flex-column align-items-center text-center">
                     <img src="{{url_for('static', filename = 'img/no-image-available.jpg')}}" alt="Admin" class="rounded-circle" width="150">
                     <div class="mt-3">
-                      <h4>{{full_name}}</h4>
-                      <p class="text-secondary mb-1">{{age}} years old</p>
-                      <a href="{{ url_for('update_me') }}">
-                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">Edit</button></a>
+<!--                      <h4>{{full_name}}</h4>-->
+<!--                      <p class="text-secondary mb-1">{{age}} years old</p>-->
                       <!--<p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p> -->
                     </div>
                   </div>
@@ -63,27 +65,32 @@
               </div>
 -->
             </div>
+
             <div class="col-md-8">
+                <form action="{{url_for('update_me')}}" method="post">
               <div class="card mb-3">
                 <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Full Name</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{full_name}}
-                    </div>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default" pattern="[a-zA-Z][a-zA-Z- ]+[a-zA-Z]">Full Name</span>
+                      </div>
+                      <input type="text" name = 'fname' value="{{g.fname[1:-1]}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                   </div>
                   <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Email</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {{email}}
-                    </div>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"  id="inputGroup-sizing-default">Email</span>
+                      </div>
+                      <input type="email" name = 'email' value="{{g.email}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                   </div>
 
+                  <hr>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Date of birth</span>
+                      </div>
+                      <input type="date" name = 'birthdate' class="form-control" name ='date' aria-label="Default" aria-describedby="inputGroup-sizing-default" value="2000-01-01" min="1875-01-01" max="2020-01-01" id="birth">
+                  </div>
                   <hr>
 <!--
                   <div class="row">
@@ -113,61 +120,58 @@
                     </div>
                   </div>
                   <hr>-->
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Health insurance</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      ● {{g.ins_life[-1]}}
-                    </div>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Health insurance</span>
+                      </div>
+                      <input type="text" value="{{g.ins_life[-1]}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
                   <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">House insurance</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-
-                      {% for insurance in g.ins_house %}
-
-                      ● {{insurance}}
-                      <br>
-                      {% endfor %}
-                    </div>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">House insurance</span>
+                      </div>
+                      <input type="text" value="{{g.ins_house}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
                   <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Car insurance</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {% for insurance in g.ins_auto %}
-
-                      ● {{insurance}}
-                      <br>
-                      {% endfor %}
-                    </div>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Car insurance</span>
+                      </div>
+                      <input type="text" value="{{g.ins_auto}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Insurance of valuables</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                      {% for insurance in g.ins_valuables %}
-
-                      ● {{insurance}}
-                      <br>
-                      {% endfor %}
-                    </div>
+                    <hr>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Valuables insurance</span>
+                      </div>
+                      <input type="text" value="{{g.ins_valuables}}" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" disabled>
                   </div>
+
                   <hr>
+                    <input type="submit" class="btn btn-success" value = 'Confirm'></input>
                 </div>
               </div>
+                    </form>
             </div>
+
           </div>
         </div>
     </div>
 {%include 'footer.html'%}
+    <script>
+        n = new Date();
+        y = n. getFullYear();
+        m = n. getMonth() + 1;
+        if(d<10){
+            d='0'+d
+            }
+        if(m<10){
+            m='0'+m
+        }
+        max_birth_date = today = y-18+'-'+m+'-'+d;
+            document.getElementById("birth").setAttribute("max", max_birth_date);
+            document.getElementById('birth').setAttribute("value", max_birth_date);
+    </script>
 </body>
 </html>
